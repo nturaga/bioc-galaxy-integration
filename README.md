@@ -1,7 +1,9 @@
 Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
-##NOTE: ALL PROOF READING IS WELCOME
+
+#### NOTE: PROOF READING IS WELCOME, PULL REQUESTS ARE ALSO WELCOME :) 
+
 
 This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for the first time**. 
 
@@ -68,6 +70,7 @@ This gives the option for a Galaxy tool to have the following **types of tools**
 
 Some excellent resources you can refer to for more information: 
 
+---------------
 
 Galaxy Tool Components
 -----------------------
@@ -265,14 +268,14 @@ Once you are happy with your tools, you can publish it on Galaxy in many ways. L
 R/Biocondutor tool wrapping tips
 --------------------
 
-* Exit codes for R tools
-* How to handle inputs and outputs through getopt package
-* How to avoid the x11 trap
-* Leverage Planemo to build and test your tools
-* Test Test and Test some more
-* Interactive tours for your tool
-* Maintain it for future versions
-* Use the python package Rpy2 for your tool wrappers
+#### Exit codes for R tools
+#### How to handle inputs and outputs through getopt package
+#### How to avoid the x11 trap
+#### Leverage Planemo to build and test your tools
+#### Test Test and Test some more
+#### Interactive tours for your tool
+#### Maintain it for future versions
+#### Use the python package Rpy2 for your tool wrappers
 
 Some tools in Bioconductor which are available through Galaxy
 --------------
