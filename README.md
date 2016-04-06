@@ -2,9 +2,6 @@ Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
 
-#### NOTE: PROOF READING IS WELCOME, PULL REQUESTS ARE ALSO WELCOME :) 
-
-
 This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for the first time**. 
 
 Aims: 
