@@ -30,9 +30,14 @@ Aims:
 	* [DESeq2 a model package for Galaxy written by Bjoern Gruening](#deseq2-a-model-package-for-galaxy-written-by-bjoern-gruening)
 5. [Dataset collections for Bioconductor tools](#dataset-collections-for-bioconductor-tools)
 6. [How to handle RData files](#how-to-handle-rdata-files)
-7. [Publishing tools to IUC for Code review](#publishing-tools-to-IUC-for-code-review)
-8. [R and Biocondutor tool wrapping tips](#r-and-bioconductor-tool-wrapping-tips)
-9. [Join the Galaxy community](#join-the-galaxy-community)
+7. [Putting your wrapper in configfile](#putting-your-wrapper-in-configfile)
+8. [Publishing tools to IUC for Code review](#publishing-tools-to-IUC-for-code-review)
+9. [R and Biocondutor tool wrapping tips](#r-and-bioconductor-tool-wrapping-tips)
+  * [Leverage Planemo to build and test your tools](#leverage-planemo-to-build-and-test-your-tools)
+  * [Test Test and Test some more](test-test-and-test-some-more)
+  * [Interactive tours for your tool](interactive-tours-for-your-tool)
+  * [Maintain it for future versions](maintain-it-for-future-versions)
+10. [Join the Galaxy community](#join-the-galaxy-community)
 
 ------------
 
@@ -260,26 +265,24 @@ Once you are happy with your tools, you can publish it on Galaxy in many ways. L
 R/Biocondutor tool wrapping tips
 --------------------
 
-1. Exit codes for R tools
-2. How to handle inputs and outputs through getopt package
-3. How to avoid the x11 trap
+* Exit codes for R tools
+* How to handle inputs and outputs through getopt package
+* How to avoid the x11 trap
+* Leverage Planemo to build and test your tools
+* Test Test and Test some more
+* Interactive tours for your tool
+* Maintain it for future versions
+* Use the python package Rpy2 for your tool wrappers
 
+Some tools in Bioconductor which are available through Galaxy
+--------------
+  
+1. [cummerbund](https://github.com/galaxyproject/tools-devteam/tree/master/tools/cummerbund)
+2. [DESeq2](https://github.com/galaxyproject/tools-iuc/tree/master/tools/deseq2)
+3. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
 
-#### Join the Galaxy Community
-
-
+Join the Galaxy Community
+--------------
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
-
-
-
-  [1]: http://math.stackexchange.com/
-  [2]: http://daringfireball.net/projects/markdown/syntax "Markdown"
-  [3]: https://github.com/jmcmanus/pagedown-extra "Pagedown Extra"
-  [4]: http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference
-  [5]: https://code.google.com/p/google-code-prettify/
-  [6]: http://highlightjs.org/
-  [7]: http://bramp.github.io/js-sequence-diagrams/
-  [8]: http://adrai.github.io/flowchart.js/
-
 
 **NOTE** These tool design models will be constantly improving, if you see any changes that need to be made, please send me a pull request with the material or file an issue. Help from the community to improve this document is always welcome.
