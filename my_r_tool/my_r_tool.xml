@@ -1,0 +1,21 @@
+<tool id="my_tool_id" name="My NIFTY R TOOL" version="0.1.0">
+    <command><![CDATA[
+        Rscript my_r_tool.R $input > $output
+    ]]></command>
+    <inputs>
+        <param type="data" name="input1" format="input_datatype" /> 
+    </inputs>
+    <outputs>
+        <data name="output1" format="output_datatype" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="name_of_input_file.extension"/>
+            <output name="output1" file="name_of_output_file.extension"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+        Write you tool help section HERE
+    ]]></help>
+    <expand macro="citations" />
+</tool>

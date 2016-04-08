@@ -32,10 +32,10 @@ Aims:
 7. [Putting your wrapper in configfile](#putting-your-wrapper-in-configfile)
 8. [Publishing tools to IUC for Code review](#publishing-tools-to-IUC-for-code-review)
 9. [R and Biocondutor tool wrapping tips](#r-and-bioconductor-tool-wrapping-tips)
-  * [Leverage Planemo to build and test your tools](#leverage-planemo-to-build-and-test-your-tools)
-  * [Test Test and Test some more](test-test-and-test-some-more)
-  * [Interactive tours for your tool](interactive-tours-for-your-tool)
-  * [Maintain it for future versions](maintain-it-for-future-versions)
+    * [Leverage Planemo to build and test your tools](#leverage-planemo-to-build-and-test-your-tools)
+    * [Test Test and Test some more](test-test-and-test-some-more)
+    * [Interactive tours for your tool](interactive-tours-for-your-tool)
+    * [Maintain it for future versions](maintain-it-for-future-versions)
 10. [Join the Galaxy community](#join-the-galaxy-community)
 
 ------------
@@ -58,12 +58,12 @@ This gives the option for a Galaxy tool to have the following **types of tools**
 4. Multiple inputs with Multiple Outputs.
 
 
-> **Note:** If you want to skip ahead to examples to each of these types of tools, click the links given below.
+**Note:** If you want to skip ahead to examples to each of these types of tools, click the links given below.
 
-> - Single input with Single Output [INSERT Tool Example][1]
-> - Single input with Multiple Outputs [INSERT Tool Example][2]
-> - Multiple inputs with Single Output [INSERT Tool Example][3]
-> - Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
+- Single input with Single Output [INSERT Tool Example][1]
+- Single input with Multiple Outputs [INSERT Tool Example][2]
+- Multiple inputs with Single Output [INSERT Tool Example][3]
+- Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
 Some excellent resources you can refer to for more information: 
 
@@ -75,12 +75,12 @@ Galaxy Tool Components
 This is going to be the minimal structure of your galaxy tool.
 
 ```
-<tool id="your_tool_id" name="your_tool_name" version="0.1.0">
+<tool id="my_tool_id" name="My NIFTY R TOOL" version="0.1.0">
     <command><![CDATA[
         Rscript my_r_tool.R $input > $output
     ]]></command>
     <inputs>
-        <param type="data" name="input1" format="input_datatype" />
+        <param type="data" name="input1" format="input_datatype" /> 
     </inputs>
     <outputs>
         <data name="output1" format="output_datatype" />
@@ -94,22 +94,31 @@ This is going to be the minimal structure of your galaxy tool.
     <help><![CDATA[
         Write you tool help section HERE
     ]]></help>
-    <expand macro="citations" />
+    <citations>
+       <citation type="doi">10.1093/bioinformatics/btq281</citation>
+    </citations>
 </tool>
+
 ```
 
 This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance.
 
+
+**What is this CDATA?**
+
+In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively.
+
+
 ```{r}
 # Setup R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
-
 # We need to not crash galaxy with an UTF8 error on German LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
 # Import library
 library("getopt")
 options(stringAsfactors = FALSE, useFancyQuotes = FALSE)
+# Take in trailing command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
 # get options, using the spec as defined by the enclosed list.
@@ -142,34 +151,16 @@ if (is.null(opt$preprocess)) {
     q(status=1)
 }
 cat("preprocess = ",opt$preprocess,"\n")
-cat("cores = ", opt$cores, "\n")
-cat("b_permutations = ",opt$b_permutations,"\n")
-cat("smooth = ",opt$smooth,"\n")
-cat("cutoff = ",opt$cutoff,"\n")
-cat("l_value = ",opt$l_value,"\n")
-cat("numPositions = ",opt$numPositions,"\n")
-cat("shrinkVar = ",opt$shrinkVar,"\n")
 
 
 # Load required libraries
-suppressPackageStartupMessages({
-    library("minfi")
-    library("FlowSorted.Blood.450k")
-    library("TxDb.Hsapiens.UCSC.hg19.knownGene")
-    library("doParallel")
-})
+#suppressPackageStartupMessages({
+	#library("doParallel")
+#})
 
 
-# Parse cheetah code and make dataframe for creating tmp dir
-if ( verbose ) {
-    cat("Minfi targets file:\n\n ")
-    print(targets)
-}
 # Save result, which contains DMR's and closest genes
 write.csv(annotated_dmrs,file = "dmrs.csv",quote=FALSE,row.names=FALSE)
-
-# Garbage collect
-gc()
 ```
 
 
@@ -221,15 +212,13 @@ Dataset collections for Bioconductor tools
 
 
 -----------
-
 How to handle RData files
 -------------
 
 
+
+
 ---------------
-
-
-
 Putting your wrapper in configfile
 --------------------
 
@@ -239,7 +228,7 @@ Pros
 1. Single file
 2. 
 
-
+---------
 How do I handle dependencies for my Bioconductor package
 ---------------
 
@@ -253,26 +242,34 @@ How do I handle dependencies for my Bioconductor package
 
 Publishing tools to IUC for Code review (Recommended)
 -------------
-
 Once you are happy with your tools, you can publish it on Galaxy in many ways. List them all here.
 
 
-----------
-
-
 -------------------
+
 
 R/Biocondutor tool wrapping tips
 --------------------
 
 #### Exit codes for R tools
+
 #### How to handle inputs and outputs through getopt package
-#### How to avoid the x11 trap
+
+#### How to avoid the x11 trap      
+
 #### Leverage Planemo to build and test your tools
+
 #### Test Test and Test some more
+
 #### Interactive tours for your tool
+
 #### Maintain it for future versions
+
 #### Use the python package Rpy2 for your tool wrappers
+
+
+--------
+
 
 Some tools in Bioconductor which are available through Galaxy
 --------------
@@ -281,8 +278,19 @@ Some tools in Bioconductor which are available through Galaxy
 2. [DESeq2](https://github.com/galaxyproject/tools-iuc/tree/master/tools/deseq2)
 3. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
 
+
+--------
+
 Join the Galaxy Community
 --------------
+
+1. [https://github.com/galaxyproject](https://github.com/galaxyproject)
+2. [https://usegalaxy.org](https://usegalaxy.org)
+3. [https://galaxyproject.org](https://galaxyproject.org)
+4. [https://github.com/galaxyproject/tools-iuc](https://github.com/galaxyproject/tools-iuc)
+5. [https://github.com/galaxyproject/tools-devteam](https://github.com/galaxyproject/tools-devteam)
+
+
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
 
 **NOTE** These tool design models will be constantly improving, if you see any changes that need to be made, please send me a pull request with the material or file an issue. Help from the community to improve this document is always welcome.
