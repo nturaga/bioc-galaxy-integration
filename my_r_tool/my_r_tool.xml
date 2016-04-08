@@ -17,5 +17,7 @@
     <help><![CDATA[
         Write you tool help section HERE
     ]]></help>
-    <expand macro="citations" />
+    <citations>
+       <citation type="doi">10.1093/bioinformatics/btq281</citation>
+    </citations>
 </tool>
