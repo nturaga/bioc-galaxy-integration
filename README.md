@@ -2,7 +2,7 @@ Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
 
-This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for the first time**. 
+This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. Bioconductor represents a large body of bioconductor tools which are waiting to be integrated into the Galaxy ecosystem. 
 
 Aims: 
 
@@ -46,8 +46,8 @@ Lets talk about Galaxy tools first
 
 A Galaxy tool has three important components, 
 
-1. **Input** - Single Input or Multiple Inputs
-2. **Output** - Single Output or Multiple Ouputs
+1. **Inputs** - Single Input or Multiple Inputs
+2. **Outputs** - Single Output or Multiple Ouputs
 3. **Wrapper** - Script or Wrapper which does the computation for your selected package of choice. 
 
 This gives the option for a Galaxy tool to have the following **types of tools**,
@@ -72,46 +72,49 @@ Some excellent resources you can refer to for more information:
 Galaxy Tool Components
 -----------------------
 
-This is going to be the minimal structure of your galaxy tool.
+This is going to be the minimal structure of your galaxy tool. This part of your tool, will go into your xml file, 
+**my_r_tool.xml**. The full path to your tool script is given shown in the script file in the **my_r_tool** directory, **/Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R** (this is a reference in my home directory). 
 
 ```
-<tool id="my_tool_id" name="My NIFTY R TOOL" version="0.1.0">
-    <command><![CDATA[
-        Rscript my_r_tool.R $input > $output
+<tool id="my_r_tool" name="MY NIFTY R TOOL" version="0.1.0">
+    <command detect_errors="exit_code"><![CDATA[
+        Rscript </full/path/>my_r_tool.R --input $galaxy_input --output $galaxy_output
     ]]></command>
     <inputs>
-        <param type="data" name="input1" format="input_datatype" /> 
+        <param type="data" name="galaxy_input" format="csv" /> 
     </inputs>
     <outputs>
-        <data name="output1" format="output_datatype" />
+        <data name="galaxy_output" format="csv" />
     </outputs>
     <tests>
         <test>
-            <param name="input1" value="name_of_input_file.extension"/>
-            <output name="output1" file="name_of_output_file.extension"/>
+            <param name="galaxy_input" value="input.csv"/>
+            <output name="galaxy_output" file="output.csv"/>
         </test>
     </tests>
     <help><![CDATA[
-        Write you tool help section HERE
+        Write you tool help section here
     ]]></help>
     <citations>
-       <citation type="doi">10.1093/bioinformatics/btq281</citation>
-    </citations>
+        <!-- Sample citation to the original Galaxy paper -->
+        <citation>10.1186/gb-2010-11-8-r86</citation>
+    </citations> 
 </tool>
 
 ```
 
-This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance.
+This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance. This part goes into your **my_tool.R**. 
 
 
 **What is this CDATA?**
 
-In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively.
+In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is good if you don't want to use the usual syntax.
 
 
 ```{r}
 # Setup R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
+
 # We need to not crash galaxy with an UTF8 error on German LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
@@ -123,49 +126,35 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # get options, using the spec as defined by the enclosed list.
 # we read the options from the default: commandArgs(TRUE).
-spec <- matrix(c(
-    'quiet', 'q', 2, "logical",
-    'help' , 'h', 0, "logical",
-    "input1","i",2,"double",
-    "output1","o",2,"integer")
-    ,byrow=TRUE, ncol=4)
-opt <- getopt(spec)
+option_specification = matrix(c(
+  'input', 'i', 2, 'character',
+  'output', 'o', 2, 'character'
+), byrow=TRUE, ncol=4);
 
-# If help was asked for print a friendly message
-# and exit with a non-zero error code
-if (!is.null(opt$help)) {
-    cat(getopt(spec, usage=TRUE))
-    q(status=1)
-}
+# Parse options
+options = getopt(option_specification);
+
+# Print options to see what is going on
+cat("\n input: ",options$input)
+cat("\n output: ",options$output)
 
 
-## Set verbose mode
-verbose = if(is.null(opt$quiet)){TRUE}else{FALSE}
-if(verbose){
-    cat("Verbose mode is ON\n\n")
-}
+# READ in your input file
+inp = read.csv(file=options$input, stringsAsFactors = FALSE)
 
-# Enforce the following required arguments
-if (is.null(opt$preprocess)) {
-    cat("'--preprocess' is required\n")
-    q(status=1)
-}
-cat("preprocess = ",opt$preprocess,"\n")
+# Do something with you input
+# This one changes every value in the first column to 0
+inp$V1 = c(rep(0,10))
 
-
-# Load required libraries
-#suppressPackageStartupMessages({
-	#library("doParallel")
-#})
-
-
-# Save result, which contains DMR's and closest genes
-write.csv(annotated_dmrs,file = "dmrs.csv",quote=FALSE,row.names=FALSE)
+# Save your output as the file you want to Galaxy to recognize.
+write.csv(inp, file=options$output,row.names = FALSE)
+cat("\n success \n")
 ```
 
 
 #### Input
 
+The input files in R are passed via 
 
 #### Output
 
@@ -202,6 +191,9 @@ R and Bioconductor tool integration best practices
 
 The package is now being shipped in the Bioconductor distribution of DESeq2. 
 
+
+
+
 ----------
 
 
@@ -209,6 +201,7 @@ The package is now being shipped in the Bioconductor distribution of DESeq2.
 
 Dataset collections for Bioconductor tools
 ----------
+
 
 
 -----------
@@ -248,7 +241,7 @@ Once you are happy with your tools, you can publish it on Galaxy in many ways. L
 -------------------
 
 
-R/Biocondutor tool wrapping tips
+R and Biocondutor tool wrapping tips
 --------------------
 
 #### Exit codes for R tools
@@ -260,6 +253,14 @@ R/Biocondutor tool wrapping tips
 #### Leverage Planemo to build and test your tools
 
 #### Test Test and Test some more
+
+#### R session running on your galaxy
+
+You local machine is going to have you R_HOME set to your default R installtion. But you want to invoke the R installation with the galaxy tool dependency directory. The **tool-dependency** directory is set via your galaxy.ini file. 
+
+```
+tool_dependency_dir = /Users/nturaga/Documents/workspace/minfi_galaxy/shed_tools
+```
 
 #### Interactive tours for your tool
 

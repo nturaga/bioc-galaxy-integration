@@ -11,42 +11,26 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # get options, using the spec as defined by the enclosed list.
 # we read the options from the default: commandArgs(TRUE).
-spec <- matrix(c(
-    'quiet', 'q', 2, "logical",
-    'help' , 'h', 0, "logical",
-    "input1","i",2,"double",
-    "output1","o",2,"integer")
-    ,byrow=TRUE, ncol=4)
-opt <- getopt(spec)
+option_specification = matrix(c(
+  'input', 'i', 2, 'character',
+  'output', 'o', 2, 'character'
+), byrow=TRUE, ncol=4);
 
-# If help was asked for print a friendly message
-# and exit with a non-zero error code
-if (!is.null(opt$help)) {
-    cat(getopt(spec, usage=TRUE))
-    q(status=1)
-}
+# Parse options
+options = getopt(option_specification);
+
+# Print options to see what is going on
+cat("\n input: ",options$input)
+cat("\n output: ",options$output)
 
 
-## Set verbose mode
-verbose = if(is.null(opt$quiet)){TRUE}else{FALSE}
-if(verbose){
-    cat("Verbose mode is ON\n\n")
-}
+# READ in your input file
+inp = read.csv(file=options$input, stringsAsFactors = FALSE)
 
-# Enforce the following required arguments
-if (is.null(opt$preprocess)) {
-    cat("'--preprocess' is required\n")
-    q(status=1)
-}
-cat("preprocess = ",opt$preprocess,"\n")
+# Do something with you input
+# This one changes every value in the first column to 0
+inp$V1 = c(rep(0,10))
 
-
-# Load required libraries
-#suppressPackageStartupMessages({
-	#library("doParallel")
-#})
-
-
-# Save result, which contains DMR's and closest genes
-write.csv(annotated_dmrs,file = "dmrs.csv",quote=FALSE,row.names=FALSE)
-
+# Save your output as the file you want to Galaxy to recognize.
+write.csv(inp, file=options$output,row.names = FALSE)
+cat("\n success \n")
