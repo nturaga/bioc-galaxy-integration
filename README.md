@@ -1,15 +1,13 @@
 Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
-
-This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. [Bioconductor](https://www.bioconductor.org/) represents a large body of bioconductor tools which are waiting to be integrated into the Galaxy ecosystem. 
+This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. [Bioconductor](https://www.bioconductor.org/) represents a large body of bioconductor tools which are highly used, are ready to be integrated into the Galaxy ecosystem.
 
 Aims: 
 
 - R package integration to Galaxy
 - Bioconductor package integration to Galaxy
 - Best practices to handle R/Bioconductor tool integration
-
 
 ----------
 
@@ -44,11 +42,11 @@ Aims:
 Lets talk about Galaxy tools first
 -------------
 
-A Galaxy tool has three important components, 
+A Galaxy tool which is defined by a Tool defenition file (xml format) has three important components, 
 
-1. **Inputs** - Single or Multiple Inputs
+1. **Inputs** - Single or Multiple Inputs 
 2. **Outputs** - Single or Multiple Ouputs
-3. **Wrapper** - Script or Wrapper which does the interface between Galaxy and the selected package of your choice. 
+3. **Custom Script** - Script using the R package of your choice.
 
 This gives the option for a Galaxy tool to have the following **types of tools**,
 
@@ -56,14 +54,6 @@ This gives the option for a Galaxy tool to have the following **types of tools**
 2. Single input with Multiple Outputs
 3. Multiple inputs with Single Output
 4. Multiple inputs with Multiple Outputs.
-
-
-**Note:** If you want to skip ahead to examples to each of these types of tools, click the links given below.
-
-- Single input with Single Output [INSERT Tool Example][1]
-- Single input with Multiple Outputs [INSERT Tool Example][2]
-- Multiple inputs with Single Output [INSERT Tool Example][3]
-- Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
 Some excellent resources you can refer to for more information:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
@@ -73,13 +63,13 @@ Some excellent resources you can refer to for more information:
 Galaxy Tool Components
 -----------------------
 
-This is going to be the minimal structure of your galaxy tool. This part of your tool will go into your xml file: 
+This is going to be the minimal structure of your galaxy tool defintion file. This tool definition file will go into your xml file: 
 **my_r_tool.xml**. The full path to your tool is set in the wrapper file, in the **my_r_tool** directory. For example: **/Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R** (this is a reference in my home directory). 
 
 ```
 <tool id="my_r_tool" name="MY NIFTY R TOOL" version="0.1.0">
     <command detect_errors="exit_code"><![CDATA[
-        Rscript </full/path/>my_r_tool.R --input $galaxy_input --output $galaxy_output
+        Rscript </full/path/>my_r_tool.R --input $galaxy_input --output $galaxy_output 
     ]]></command>
     <inputs>
         <param type="data" name="galaxy_input" format="csv" /> 
@@ -111,11 +101,6 @@ This is going to be the minimal structure of your tool wrapper, calling some bio
 
 In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is good if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
 
-Remi's suggestions for the next script:
-- Do you think it is a good idea to map R code with Wrapper code. For example:
-```{r}
-'input', 'i', 2, 'character' # Match your <inputs><param type="data" name="galaxy_input" format="csv" /></inputs> in the wrapper
-```
 
 ```{r}
 # Setup R error handling to go to stderr
@@ -158,14 +143,51 @@ cat("\n success \n")
 ```
 
 
-#### Input
+#### Inputs
 
-The input files in R are passed via 
+The inputs in your Galaxy tool definition file are given by the xml tags ```<inputs>``` and each input inside of it is given by ```<param>``` tag. In the ```<param>``` tag you can define ```name, value, type, label``` attributes. More details can be found on these xml tags at [this link](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cinputs.3E_tag_set).
 
-#### Output
+#### Outputs
 
+The outputs in your Galaxy tool definition file are given by the xml tags ```<outputs>``` and each output inside it is given by the ```<data>``` tag. In the ```<data>``` tag you can define ```name,format,from_work_dir``` attributes. More details can be found on these xml tags which define outputs here at [this link](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cdata.3E_tag_set)
 
-#### Wrapper
+#### Script
+
+The R script which you write, needs to be written in a specific way to work with Galaxy. It needs to take in command line arguments for inputs. In the example script given **my_r_tool.R**, we use the package ```getopt``` in R to add command line arguments. This can also be done in other ways using ```args = commandArgs(trailingOnly=TRUE)``` and then running your script with ```Rscript --vanilla randomScript.R input.csv output.csv``` which doesn't give you the option of defining flags, or using the package ```optparse``` for a more pythonic style. Refer this blog, if you want more details on [how to pass command line arguemnts in R](http://www.r-bloggers.com/passing-arguments-to-an-r-script-from-command-lines).
+
+A couple of extra lines which can be added to your script at the top are to setup R error handling to go stderr on Galaxy, and to handle a UTF8 error.
+```
+# Setup R error handling to go to stderr
+options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
+
+# We need to not crash galaxy with an UTF8 error on German LC settings.
+loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
+```
+
+NOTE: The ```cat``` statments in the R script given as example are only to show how inputs and outputs are passed. These statements will into your stdout. 
+
+The outputs in your script can be saved in a format which is present in the list of galaxy recognized datatypes - [List of galaxy datatypes](https://wiki.galaxyproject.org/Learn/Datatypes). Galaxy now also saves files as Rdata files, but the feature to visualize them is under development. Once the output is generated by your script, Galaxy recognizes it and then displays it as your job output.
+
+#### Putting it all together
+
+Lets start with Galaxy, first upload a file into your galaxy (eg: input.csv) and you want to do some computation on this file with a galaxy tool (eg: MY NIFTY R TOOL). You use the uploaded file as input for your tool. This works, because your R script in **my_r_tool/my_r_tool.R** takes in command line arguments ```--input``` and ```--output```. Your uploaded file ```input.csv``` is passed into your tool via the argument ```--input``` in your script and the processed by it (```options$input``` is your input.csv file now). The value for ```--output``` is passed in by Galaxy, as the resulting dataset produced.
+
+Its important not to worry about the working directory writing your R script, because by default its going to be in the tool working directory in Galaxy. So, ```setwd()``` and ```getwd()``` should not be needed.
+
+You should write your R script in such a way that, it is testable and usable outside of Galaxy. This allows your script to be easily accessible to users both within the Galaxy world and outside. You can test this R script with the command line instruction 
+
+```
+ Rscript my_r_tool.R --input "input.csv"  --output "output.csv"
+ ```
+ 
+ If we look at the script run by the Galaxy tool, it looks very similar. This can be found if you click on the information *i* icon on your job run. 
+ 
+<img src="https://github.com/nturaga/bioc-galaxy-integration/images/information.png" >
+<img src="https://github.com/nturaga/bioc-galaxy-integration/images/stdout.png" >
+ 
+ ```
+ Job Command-Line:	Rscript /Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R --input /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_243.dat --output /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_249.dat
+ ```
 
 
 #### Other components and their detailed reference
@@ -182,20 +204,23 @@ The input files in R are passed via
 
 -------------
 
+
 Types of Tools
 ----------------
 
-#### Single Input with Single Output
+Based on the nature of how the inputs and outputs are designed. A galaxy tool can have multiple inputs and multiple outputs. 
 
+#### Single Input with Single Output
+- Single input with Single Output [INSERT Tool Example][1]
 
 #### Single Input with Multiple Outputs
-
+- Single input with Multiple Outputs [INSERT Tool Example][2]
 
 #### Multiple Inputs with Single Output
-
+- Multiple inputs with Single Output [INSERT Tool Example][3]
 
 #### Mutliple Inputs with Multiple Outputs
-
+- Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
 
 ----------
@@ -203,12 +228,11 @@ Types of Tools
 R and Bioconductor tool integration best practices
 -------------------
 
-#### DESeq2 a model package for Galaxy written by Bjoern Gruening
+#### DESeq2 a model package for Galaxy written by Björn Gruening
 
-The package is now being shipped in the Bioconductor distribution of DESeq2. 
+The DESeq2 script which can be used with Galaxy is now shipped along with the Bioconductor package directly. This script can be found here at this [link](https://github.com/Bioconductor-mirror/DESeq2/blob/release-3.2/inst/script/deseq2.R). This could be an valuable example for new Bioconductor tool authors who want to make their tool more easily available to the community. 
 
-
-
+The way factors are represented in the script works well with the Galaxy framework. The way the factors are represented in the Galaxy tool form is also extremely functional, and allows users to choose multiple factors that effect the experiment pretty easily. There are many Bioconductor tools which work with a differential comparison model controlling for multiple factors, which could use this sort of tool form. The tool form for DESeq2 can be found here at this [link](https://github.com/galaxyproject/tools-iuc/blob/master/tools/deseq2/deseq2.xml). 
 
 ----------
 
@@ -218,7 +242,14 @@ The package is now being shipped in the Bioconductor distribution of DESeq2.
 Dataset collections for Bioconductor tools
 ----------
 
+Dataset collections written by the amazing [John Chilton](https://github.com/jmchilton) give Galaxy the ability to represent complex datasets and also run tools, on a collection of samples. Dataset collections are specially useful for tools which run on multiple files at the same time, the input would then comprise of a "collection of files".
 
+Some examples for tools based on dataset collections are:
+
+1. Minfi
+2. Sickle
+
+---------------
 
 -----------
 How to handle RData files
@@ -294,8 +325,7 @@ Some tools in Bioconductor which are available through Galaxy
 1. [cummerbund](https://github.com/galaxyproject/tools-devteam/tree/master/tools/cummerbund)
 2. [DESeq2](https://github.com/galaxyproject/tools-iuc/tree/master/tools/deseq2)
 3. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
-
-
+4. [minfi]()
 --------
 
 Join the Galaxy Community
@@ -307,7 +337,7 @@ Join the Galaxy Community
 4. [https://github.com/galaxyproject/tools-iuc](https://github.com/galaxyproject/tools-iuc)
 5. [https://github.com/galaxyproject/tools-devteam](https://github.com/galaxyproject/tools-devteam)
 6. #galaxyproject on IRC (server: irc.freenode.net)
-
+7. [https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
 
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
 
