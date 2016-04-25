@@ -104,7 +104,7 @@ This is going to be the minimal structure of your galaxy tool. This part of your
 
 ```
 
-This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance. This part goes into your **my_tool.R** (What do you mean here?). 
+This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance. This part goes into your **my_tool.R** 
 
 
 **What is this CDATA?**
