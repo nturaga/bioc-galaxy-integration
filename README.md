@@ -2,7 +2,7 @@ Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
 
-This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. Bioconductor represents a large body of bioconductor tools which are waiting to be integrated into the Galaxy ecosystem. 
+This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. [Bioconductor](https://www.bioconductor.org/) represents a large body of bioconductor tools which are waiting to be integrated into the Galaxy ecosystem. 
 
 Aims: 
 
@@ -46,9 +46,9 @@ Lets talk about Galaxy tools first
 
 A Galaxy tool has three important components, 
 
-1. **Inputs** - Single Input or Multiple Inputs
-2. **Outputs** - Single Output or Multiple Ouputs
-3. **Wrapper** - Script or Wrapper which does the computation for your selected package of choice. 
+1. **Inputs** - Single or Multiple Inputs
+2. **Outputs** - Single or Multiple Ouputs
+3. **Wrapper** - Script or Wrapper which does the interface between Galaxy and the selected package of your choice. 
 
 This gives the option for a Galaxy tool to have the following **types of tools**,
 
@@ -65,15 +65,16 @@ This gives the option for a Galaxy tool to have the following **types of tools**
 - Multiple inputs with Single Output [INSERT Tool Example][3]
 - Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
-Some excellent resources you can refer to for more information: 
+Some excellent resources you can refer to for more information:
+- [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
 
 ---------------
 
 Galaxy Tool Components
 -----------------------
 
-This is going to be the minimal structure of your galaxy tool. This part of your tool, will go into your xml file, 
-**my_r_tool.xml**. The full path to your tool script is given shown in the script file in the **my_r_tool** directory, **/Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R** (this is a reference in my home directory). 
+This is going to be the minimal structure of your galaxy tool. This part of your tool will go into your xml file: 
+**my_r_tool.xml**. The full path to your tool is set in the wrapper file, in the **my_r_tool** directory. For example: **/Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R** (this is a reference in my home directory). 
 
 ```
 <tool id="my_r_tool" name="MY NIFTY R TOOL" version="0.1.0">
@@ -103,13 +104,18 @@ This is going to be the minimal structure of your galaxy tool. This part of your
 
 ```
 
-This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance. This part goes into your **my_tool.R**. 
+This is going to be the minimal structure of your tool wrapper, calling some bioconductor package or R package. The comments on top of each line of code in R wrapper explain the significance. This part goes into your **my_tool.R** 
 
 
 **What is this CDATA?**
 
-In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is good if you don't want to use the usual syntax.
+In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is good if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
 
+Remi's suggestions for the next script:
+- Do you think it is a good idea to map R code with Wrapper code. For example:
+```{r}
+'input', 'i', 2, 'character' # Match your <inputs><param type="data" name="galaxy_input" format="csv" /></inputs> in the wrapper
+```
 
 ```{r}
 # Setup R error handling to go to stderr
@@ -163,6 +169,16 @@ The input files in R are passed via
 
 
 #### Other components and their detailed reference
+- If not using [Planemo](https://planemo.readthedocs.org/en/latest/) and [ToolShed](https://wiki.galaxyproject.org/ToolShed), once you are done with your wrapper locally, you *NEED* to tell Galaxy you have a new tool by doing this:
+ 1. Copy your own tool configuration file from the sample: ```cp $GALAXY_ROOT/config/tool_conf.xml.sample $GALAXY_ROOT/config/tool_conf.xml```
+ 2. Modify it by adding your own section and your wrapper inside like this: 
+    ```
+    <section name="MyTools" id="mTools">
+         <tool file="myTools/toolExample.xml" />
+    </section>
+    ```
+    More details [here](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial#A4._Make_Galaxy_aware_of_the_new_tool:)
+  3. Restart your Galaxy
 
 -------------
 
@@ -215,7 +231,7 @@ How to handle RData files
 Putting your wrapper in configfile
 --------------------
 
-There is another way to write wrappers without putting your script in a seperate file. It can be integrated into your XML through the ```<configfile>``` tag. This way, the developer can avoid having a seperate file for his Rscript. There are pros and cons to this method
+There is another way to write wrappers without putting your script in a separate file. It can be integrated into your XML through the ```<configfile>``` tag. This way, the developer can avoid having a separate file for his Rscript. There are pros and cons to this method
 
 Pros
 1. Single file
@@ -290,6 +306,7 @@ Join the Galaxy Community
 3. [https://galaxyproject.org](https://galaxyproject.org)
 4. [https://github.com/galaxyproject/tools-iuc](https://github.com/galaxyproject/tools-iuc)
 5. [https://github.com/galaxyproject/tools-devteam](https://github.com/galaxyproject/tools-devteam)
+6. #galaxyproject on IRC (server: irc.freenode.net)
 
 
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
