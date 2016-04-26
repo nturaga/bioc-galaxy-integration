@@ -244,8 +244,43 @@ Based on the nature of how the inputs and outputs are designed. A galaxy tool ca
 #### Mutliple Inputs with Multiple Outputs
 - Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
-
 ----------
+
+
+Handling dependencies for Bioconductor packages 
+---------------
+
+Dependency resolution for R/Bioconductor tools in Galaxy is made easy by a [script](https://github.com/bioarchive/aRchive_source_code/blob/master/get_galaxy_tool_dependencies.py)script developed and available through the bioarchive github repository. For now, the script is still needing a little refinement. The updates can be found in branch [bioarchive/get_tool_deps_fox](https://github.com/bioarchive/aRchive_source_code/tree/get_tool_deps_fix).
+
+The dependencies need to go into a file called ```tool_dependencies.xml```, and Galaxy will set up an R environment with the dependencies referenced in this file. The exact versions of each of these packages is rerquired.
+
+Sample directory structure for each package: 
+
+```
+package_BioconductorTool_1_0/
+└── tool_dependencies.xml 
+└── .shed.yml
+```
+
+Example package shown here is [CRISPRSeek version 1.11.0](https://github.com/galaxyproject/tools-iuc/tree/3c4a2b13b0f3a280de4f98f4f5e0dc29e10fc7a0/packages/package_r_crisprseek_1_11_0): 
+
+1. [tool_dependencies.xml file for package CRISPRSeek](https://github.com/galaxyproject/tools-iuc/blob/3c4a2b13b0f3a280de4f98f4f5e0dc29e10fc7a0/packages/package_r_crisprseek_1_11_0/tool_dependencies.xml)
+
+2. [.shed.yml file for CRISPRSeek](https://github.com/galaxyproject/tools-iuc/blob/3c4a2b13b0f3a280de4f98f4f5e0dc29e10fc7a0/packages/package_r_crisprseek_1_11_0/.shed.yml)
+
+
+There are other solutions being actively developed by Galaxy for tool dependency resolution:
+
+1. [Conda](http://conda.pydata.org/docs/get-started.html)
+
+2. [Bioconda channel](https://bioconda.github.io/)
+
+3. [bioarchive.galaxyproject.org](https://bioarchive.galaxyproject.org/)
+
+
+--------------
+
+
 
 R and Bioconductor tool integration best practices
 -------------------
@@ -304,9 +339,9 @@ if (options$verbose) {
 }
 ```
 
+7. Feature soon to be available : Conda dependency resolution for R/Bioconductor pacakges integrated in Galaxy.
+
 ----------
-
-
 
 
 Dataset collections for Bioconductor tools
@@ -321,7 +356,9 @@ Some examples for tools based on dataset collections are:
 
 ---------------
 
------------
+
+
+
 How to handle RData files
 -------------
 
@@ -335,24 +372,16 @@ Putting your wrapper in configfile
 There is another way to write wrappers without putting your script in a separate file. It can be integrated into your XML through the ```<configfile>``` tag. This way, the developer can avoid having a separate file for his Rscript. There are pros and cons to this method
 
 Pros
+
 1. Single file
+
 2. 
 
----------
-How do I handle dependencies for my Bioconductor package
----------------
-
-1. Conda
-2. bioarchive.galaxyproject.org
-3. bioconductor
-4. bjoern's magic tool dependency resolving [script](https://github.com/bioarchive/aRchive_source_code/blob/master/get_galaxy_tool_dependencies.py)
-
---------------
 
 
 Publishing tools to IUC for Code review (Recommended)
 -------------
-Once you are happy with your tools, you can publish it on Galaxy in many ways. List them all here.
+Once you are happy with your tools, you can publish it on Galaxy in many ways. List them all here:
 
 
 -------------------
