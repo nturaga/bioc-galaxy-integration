@@ -396,9 +396,10 @@ Some tools in Bioconductor which are available through Galaxy
 2. [DESeq2](https://github.com/galaxyproject/tools-iuc/tree/master/tools/deseq2)
 3. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
 4. [minfi]()
+
 --------
 
-Join the Galaxy Community
+[Join the Galaxy Community](https://wiki.galaxyproject.org/GetInvolved)
 --------------
 
 1. [https://github.com/galaxyproject](https://github.com/galaxyproject)
@@ -406,7 +407,7 @@ Join the Galaxy Community
 3. [https://galaxyproject.org](https://galaxyproject.org)
 4. [https://github.com/galaxyproject/tools-iuc](https://github.com/galaxyproject/tools-iuc)
 5. [https://github.com/galaxyproject/tools-devteam](https://github.com/galaxyproject/tools-devteam)
-6. #galaxyproject on IRC (server: irc.freenode.net)
+6. [Galaxyproject on IRC (server: irc.freenode.net)](https://wiki.galaxyproject.org/GetInvolved#IRC_Channel)
 7. [https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
 
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
