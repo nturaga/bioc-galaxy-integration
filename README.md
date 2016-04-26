@@ -24,14 +24,14 @@ NOTE: Tools from different languages can be integrated with Galaxy. Galaxy is la
 	* [Single Input with Single Output](#single-input-with-single-output)
 	* [Single Input with Multiple Outputs](#single-input-with-multiple-outputs)
 	* [Multiple Inputs with Single Output](#multiple-inputs-with-single-output)
-	* [Mutliple Inputs with Multiple Outputs](#multiple-inputs-with-multiple-outputs)
+	* [Multiple Inputs with Multiple Outputs](#multiple-inputs-with-multiple-outputs)
 4. [R and Bioconductor tool integration best-practices](#r-and-bioconductor-tool-integration-best-practices)
 	* [DESeq2 a model package for Galaxy written by Bjoern Gruening](#deseq2-a-model-package-for-galaxy-written-by-bjoern-gruening)
 5. [Dataset collections for Bioconductor tools](#dataset-collections-for-bioconductor-tools)
 6. [How to handle RData files](#how-to-handle-rdata-files)
 7. [Putting your wrapper in configfile](#putting-your-wrapper-in-configfile)
 8. [Publishing tools to IUC for Code review](#publishing-tools-to-IUC-for-code-review)
-9. [R and Biocondutor tool wrapping tips](#r-and-bioconductor-tool-wrapping-tips)
+9. [R and Bioconductor tool wrapping tips](#r-and-bioconductor-tool-wrapping-tips)
     * [Leverage Planemo to build and test your tools](#leverage-planemo-to-build-and-test-your-tools)
     * [Test Test and Test some more](test-test-and-test-some-more)
     * [Interactive tours for your tool](interactive-tours-for-your-tool)
@@ -241,7 +241,7 @@ Based on the nature of how the inputs and outputs are designed. A galaxy tool ca
 #### Multiple Inputs with Single Output
 - Multiple inputs with Single Output [INSERT Tool Example][3]
 
-#### Mutliple Inputs with Multiple Outputs
+#### Multiple Inputs with Multiple Outputs
 - Multiple inputs with Multiple Outputs [INSERT Tool Example][4]
 
 ----------
@@ -387,7 +387,7 @@ Once you are happy with your tools, you can publish it on Galaxy in many ways. L
 -------------------
 
 
-R and Biocondutor tool wrapping tips
+R and Bioconductor tool wrapping tips
 --------------------
 
 #### Exit codes for R tools
