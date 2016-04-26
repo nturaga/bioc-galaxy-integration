@@ -205,17 +205,18 @@ The print statments which you put into your R script go to your standard output 
 
 If not using [Planemo](https://planemo.readthedocs.org/en/latest/) and [ToolShed](https://wiki.galaxyproject.org/ToolShed), once you are done with your wrapper locally, you *NEED* to tell Galaxy you have a new tool by doing this:
 
- 1. Copy your own tool configuration file from the sample: 
+1. Copy your own tool configuration file from the sample: 
  ```cp $GALAXY_ROOT/config/tool_conf.xml.sample $GALAXY_ROOT/config/tool_conf.xml```
 
- 2. Modify it by adding your own section and your wrapper inside like this: 
+2. Modify it by adding your own section and your wrapper inside like this: 
     ```
     <section name="Example R tool" id="rTools">
          <tool file="/Users/Documents/my_r_tool/my_r_tool.xml" />
     </section>
     ```
     More details [here](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial#A4._Make_Galaxy_aware_of_the_new_tool:)
-  3. Restart your Galaxy
+    
+3. Restart your Galaxy
 
 -------------
 
