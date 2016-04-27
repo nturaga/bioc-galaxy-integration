@@ -1,4 +1,4 @@
-<tool id="my_r_tool" name="MY NIFTY R TOOL" version="0.1.0">
+<tool id="my_r_tool_again" name="MY NIFTY R TOOL 2" version="0.1.0">
     <command detect_errors="exit_code"><![CDATA[
         Rscript /Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R --input $galaxy_input
     ]]></command>

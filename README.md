@@ -13,7 +13,8 @@ NOTE: Tools from different languages can be integrated with Galaxy. Galaxy is la
 
 ----------
 
-
+Table of contents
+--------------
 
 <!-- MarkdownTOC -->
 
@@ -388,11 +389,83 @@ Putting your wrapper in configfile
 
 There is another way to write wrappers without putting your script in a separate file. It can be integrated into your XML through the ```<configfile>``` tag. This way, the developer can avoid having a separate file for his Rscript. There are pros and cons to this method
 
-Pros
+```
+<tool id="my_bioc_tool_configfile" name="bioc tool example" version="1.0">
+    <description>This R/Bioc tool has script in configfile</description>
+    <requirements>
+        <requirement type="R-module" version="2.14.0">Rgraphviz</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+        Rscript "${random_script_name}" 
+    </command>
+    <configfiles>
+        <configfile name="random_script_name"><![CDATA[
+## Load R/bioconductor library
+library("Rgraphviz", quietly=TRUE, warn.conflicts=FALSE,verbose = FALSE)
+
+set.seed(123)
+
+## Load the RGset data
+if(!is.null("${input1}")){
+    v = read.csv("${input1}",stringsAsFactors = F)
+    #v = v$x
+}
+
+if(!is.null(${input2})) {
+    m = read.csv("${input2}",stringsAsFactors = F)
+    #m = m$x
+}
+
+cat("I'm here making a graph")
+
+# Make graph
+g1 <- randomGraph(v$x, m$x, 0.2)
+
+## Produce PDF file
+if (!is.null("${pdffile}")) {
+    ## Make PDF of graph plot
+    pdf("${pdffile}")
+    plot(g1,"${plottype}")
+    dev.off()
+}
+      ]]></configfile>
+    </configfiles>
+    <inputs>
+        <param name="input1" type="data" label="Choose V for graph plot" format="csv"/>
+        <param name="input2" type="data" label="Choose M for graph plot" format="csv"/>
+        <param name="plottype" type="text" value="Choose type of plot" label="neato or twopi" help="You can choose 'neato' or 'twopi' only" />
+    </inputs>
+	<outputs>
+	  <data format="pdf" name="pdffile" label="PDF of Density plot"/>
+	</outputs>
+    <tests>
+        <test>
+            <param name="input1" value="V.csv" ftype="csv" />
+            <param name="input2" value="M.csv" ftype="csv" />
+            <param name="plottype" value="neato" ftype="text"/>
+            <output name="pdffile" file="pdffile.pdf" ftype="pdf" />
+        </test>
+    </tests>
+    <help><![CDATA[
+  Makes a random graph
+          ]]></help>
+    <citations>
+        <citation type="doi">10.1186/gb-2010-11-8-r86</citation>
+    </citations>
+</tool>
+```
+
+**Pros**
 
 1. Single file
 
-2.
+2. You don't need to use getopt package or any command line argument parser. The inputs are passed into your script directly.
+
+**Cons**
+
+1. You can't reuse the R script outside of Galaxy
+
+2. Debugging is NOT easy when you put your script inside the ```<configfile>``` tag.
 
 
 
