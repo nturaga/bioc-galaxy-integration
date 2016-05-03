@@ -13,6 +13,7 @@ library("Rgraphviz", quietly=TRUE, warn.conflicts=FALSE,verbose = FALSE)
 
 set.seed(123)
 
+cat("here")
 ## Load the RGset data
 if(!is.null("${input1}")){
     v = read.csv("${input1}",stringsAsFactors = F)
