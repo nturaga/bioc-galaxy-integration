@@ -41,16 +41,7 @@ Table of contents
     - [Best Practices for R/Bioconductor Tool Integration](#best-practices-for-rbioconductor-tool-integration)
     - [R/Bioconductor tool wrapping tips](#rbioconductor-tool-wrapping-tips)
     - [Publishing tools to IUC for Code review (Recommended)](#publishing-tools-to-iuc-for-code-review-recommended)
-    - [Other]
-	    - [Exit codes for R tools](#exit-codes-for-r-tools)
-	    - [How to handle inputs and outputs through getopt package](#how-to-handle-inputs-and-outputs-through-getopt-package)
-	    - [How to avoid the x11 trap](#how-to-avoid-the-x11-trap)
-	    - [Leverage Planemo to build and test your tools](#leverage-planemo-to-build-and-test-your-tools)
-	    - [Test Test and Test some more](#test-test-and-test-some-more)
-	    - [R session running on your galaxy](#r-session-running-on-your-galaxy)
-	    - [Interactive tours for your tool](#interactive-tours-for-your-tool)
-	    - [Maintain it for future versions](#maintain-it-for-future-versions)
-	    - [Use the python package Rpy2 for your tool wrappers](#use-the-python-package-rpy2-for-your-tool-wrappers)
+    - [Others]
 - [Some tools in Bioconductor which are available through Galaxy](#some-tools-in-bioconductor-which-are-available-through-galaxy)
 - [Join the Galaxy Community](#join-the-galaxy-community)
 
