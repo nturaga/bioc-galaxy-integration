@@ -1,15 +1,15 @@
 Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
-This tutorial is going to cover how to wrap R / Bioconductor packages as Galaxy tools. **It is aimed at complete beginners at Galaxy and also people writing Galaxy tools for R or Bioconductor packages for the first time**. [Bioconductor](https://www.bioconductor.org/) represents a large body of Bioconductor tools which are highly used, are ready to be integrated into the Galaxy platform.
+This tutorial will cover how to wrap R/Bioconductor packages as Galaxy tools. **It is aimed at beginners and those writing Galaxy tools for R or Bioconductor packages for the first time**. [Bioconductor](https://www.bioconductor.org/) represents a large collection of tools for the analysis of high-throughput genomic data, which are ready to be integrated into the Galaxy platform.
 
 Aims to familiarize readers with:
 
-- R package integration to Galaxy
-- Bioconductor package integration to Galaxy
+- R package integration into Galaxy
+- Bioconductor package integration into Galaxy
 - Best practices to handle R/Bioconductor tool integration
 
-NOTE: Tools from different languages can be integrated with Galaxy. Galaxy is language agnostic, but, this document takes a very R centric approach to tool integration.
+NOTE: Galaxy is language agnostic, so tools written in different languages can be integrated into Galaxy. This document focuses on R/Bioconductor tool integration.
 
 ----------
 
@@ -18,10 +18,10 @@ Table of contents
 
 <!-- MarkdownTOC -->
 
-- [Lets talk about Galaxy tools first](#lets-talk-about-galaxy-tools-first)
+- [An Overview of Galaxy Tools](#an-overview-of-galaxy-tools)
 - [Galaxy Tool Components](#galaxy-tool-components)
     - [Tool definition file](#tool-definition-file)
-        - [What is this CDATA?](#what-is-this-cdata)
+        - [What is CDATA?](#what-is-cdata)
         - [Inputs](#inputs)
         - [Outputs](#outputs)
         - [Command](#command)
@@ -59,20 +59,18 @@ Table of contents
 ------------
 
 
-Lets talk about Galaxy tools first
+An Overview of Galaxy Tools
 -------------
 
-A Galaxy tool defined by a Tool definition file (XML format) has three important components,
+A Galaxy tool is defined by a **Tool definition file** or **Tool wrapper** in XML format and has three important components:
 
-1. **Inputs** - Single or Multiple Inputs
-2. **Outputs** - Single or Multiple Outputs
-3. **Command** - The command which needs to be run by galaxy via the R interpreter
+1. *Inputs* - Single or multiple input files
+2. *Outputs* - Single or multiple output files
+3. *Command* - The command which needs to be run by Galaxy via the R interpreter
 
-The tool definition file is also called a **Wrapper** sometimes. The other piece of this process of integrating a R/Bioconductor package is a
+The final component needed for integrating an R/Bioconductor package is a **Custom R script** which uses the R/Bioconductor package to perform an analysis.
 
-4. **Custom Script** - Script using the R or Bioconductor package of your choice.
-
-Some excellent resources you can refer to for more information:
+Some excellent resources for more information:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
 - [Add a tool tutorial Wiki](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
 
@@ -84,25 +82,25 @@ Galaxy Tool Components
 
 **Directory structure of your tool**
 
-Your tool wrapper (tool definition file) and your script should go into their own directory (eg: ```my_r_tool```). So the directory structure to your your ```my_r_tool``` would look like:
+The *Tool definition file* and *Custom R script* go into their own directory (*e.g.* ```my_r_tool```). The directory structure for R/Bioconductor tool ```my_r_tool``` would look like:
 
 ```
 my_r_tool/
-├── my_r_tool.R # R script
+├── my_r_tool.R # Custom R script
 ├── my_r_tool.xml # Tool definition file
-├── test-data # Test data sets for your tool to work with Planemo
+├── test-data # Test data for tool to work with Planemo
 │   ├── input.csv
 │   └── output.csv
 ```
 
 ### Tool definition file
 
-The tool definition file given below is going to be the minimal structure of your galaxy tool definition file. This tool definition file will go into your XML file: ```my_r_tool.xml```.
+The example XML code below represents the minimal structure of a Galaxy *Tool definition file* (```my_r_tool.xml```) to call an R/Bioconductor package. Another example *Tool definition file* can be found [here](https://wiki.galaxyproject.org/Tools/SampleToolTemplate?action=show&redirect=Admin%2FTools%2FExampleXMLFile).
 
 ```
 <tool id="my_r_tool" name="MY NIFTY R TOOL" version="0.1.0">
     <command detect_errors="exit_code"><![CDATA[
-        Rscript </full/path/>my_r_tool.R --input $galaxy_input --output $galaxy_output
+        Rscript </path/to/directory/my_r_tool/my_r_tool.R --input $galaxy_input --output $galaxy_output
     ]]></command>
     <inputs>
         <param type="data" name="galaxy_input" format="csv" />
@@ -127,29 +125,28 @@ The tool definition file given below is going to be the minimal structure of you
 
 ```
 
-This is going to be the minimal structure of your tool wrapper, calling some Bioconductor package or R package.The [Sample tool definition file](https://wiki.galaxyproject.org/Tools/SampleToolTemplate?action=show&redirect=Admin%2FTools%2FExampleXMLFile) gives you the structure of the tool definition file.
 
-#### What is this CDATA?
+#### What is CDATA?
 
-In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data; there is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is good if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
+In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data. There is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which, for example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. So, using CDATA is a good idea if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
 
 
 #### Inputs
 
-The inputs in your Galaxy tool definition file are given by the XML tags ```<inputs>``` and each input inside of it is given by ```<param>``` tag. In the ```<param>``` tag you can define ```name, value, type, label``` attributes. More details can be found on these XML tags at [this link](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cinputs.3E_tag_set).
+Inputs to the Galaxy *Tool definition file* are given by the XML tags ```<inputs>```, and each input inside is given by the ```<param>``` tag. In the ```<param>``` tag you can define ```name, value, type, label``` attributes. More details can be found [here](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cinputs.3E_tag_set).
 
 #### Outputs
 
-The outputs in your Galaxy tool definition file are given by the XML tags ```<outputs>``` and each output inside it is given by the ```<data>``` tag. In the ```<data>``` tag you can define ```name,format,from_work_dir``` attributes. More details can be found on these XML tags which define outputs here at [this link](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cdata.3E_tag_set)
+Outputs of the Galaxy *Tool definition file* are given by the XML tags ```<outputs>```, and each output inside is given by the ```<data>``` tag. In the ```<data>``` tag you can define ```name, format, from_work_dir``` attributes. More details can be found  [here](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cdata.3E_tag_set).
 
 
 #### Command
 
-The full path to your tool is set in the wrapper file, in the **my_r_tool** directory. For example: **/Users/nturaga/Documents/my_r_tool/my_r_tool.R** (this is a reference from my home directory).
+The full path to the Galaxy tool is set in the *Tool definition file*. For example: ```/path/to/directory/my_r_tool/my_r_tool.R```.
 
 ### Custom R script
 
-The comments on top of each line of code in R wrapper explain the significance. This script goes into your **my_r_tool.R**. This script is very simple, it sets the first column of an input CSV file to zeros and saves the output as another CSV file.
+Below is a simple example *Custom R script* (```my_r_tool.R```). It sets the first column of an input CSV file to zeros and saves the output as another CSV file.
 
 ```{r}
 # Setup R error handling to go to stderr
@@ -194,7 +191,7 @@ cat("\n success \n")
 
 ### How does it all work together?
 
-Lets start with Galaxy, first upload the file you would like to use as input to your tool(eg: MY NIFTY R TOOL) to your galaxy (eg: ```input.csv```). As you execute the tool,```input.csv``` is passed via your tool definition file template into your R script (```my_r_tool.R```). The script takes in command line arguments ```--input``` and ```--output```, and  the uploaded file ```input.csv``` is passed into your tool via the argument ```--input``` and the processed by it (```options$input``` is your ```input.csv``` file now). The value for ```--output``` is passed in by Galaxy, as the resulting dataset produced.
+First, upload input file(s) (*e.g.* ```input.csv```) to Galaxy. When the tool executes,```input.csv``` is passed via the *Tool definition file* (```my_r_tool.xml```) into the *Custom R script* (```my_r_tool.R```). The script takes in command line arguments ```--input``` and ```--output```, and the input file(s) ```input.csv``` is passed to the tool via the argument ```--input``` and the processed by it (```options$input``` is your ```input.csv``` file now). The value for ```--output``` is passed in by Galaxy, as the resulting dataset produced.
 
 Its important not to worry about the working directory while writing your R script, because by default its going to be in the job working directory in Galaxy. So, ```setwd()``` and ```getwd()``` should not be needed. The
 
