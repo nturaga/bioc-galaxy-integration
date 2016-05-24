@@ -208,7 +208,7 @@ How Galaxy Tool Components Work Together
 
 ### Tool execution
 
-First, the input file (*e.g.* ```input.csv```) should be uploaded to Galaxy. When MY_R_TOOL executes,```input.csv``` is passed by the ```--input``` argument in the *Tool definition file* (```my_r_tool.xml```) to the *Custom R script* (```my_r_tool.R```). The *Custom R script* executes and sends the results back to the *Tool definition file* to be saved according to the value set for ```--output```. The output file is then available in Galaxy.
+First, the input file (*e.g.* ```input.csv```) should be uploaded to Galaxy. When MY_R_TOOL executes,```input.csv``` is passed by the ```--input``` argument in the *Tool definition file* to the *Custom R script*. The *Custom R script* executes and sends the results back to the *Tool definition file* to be saved according to the value set for ```--output```. The output file is then available in Galaxy.
 
 Its important not to worry about the working directory while writing your R script, because by default its going to be in the job working directory in Galaxy. So, ```setwd()``` and ```getwd()``` should not be needed.
 
@@ -267,6 +267,8 @@ Other solutions being actively developed by Galaxy for tool dependency resolutio
 Handling RData files
 -------------
 
+**TO DO.**
+
 --------------
 
 Supplementary Information
@@ -277,6 +279,12 @@ Supplementary Information
 The DESeq2 [*Custom R script*](https://github.com/Bioconductor-mirror/DESeq2/blob/release-3.2/inst/script/deseq2.R), which can be used with Galaxy, is now shipped along with the R/Bioconductor package directly. This is a good example for new R/Bioconductor tool authors who want to make their tool more easily available to the community.
 
 The way factors are represented in the *Custom R scrip* works well with the Galaxy framework. The way factors are represented in the [*Tool definition form*](https://github.com/galaxyproject/tools-iuc/blob/master/tools/deseq2/deseq2.xml) is extremely functional and allows users to easily choose multiple factors that effect the experiment. There are many R/Bioconductor tools which work with a differential comparison model controlling for multiple factors, which could use this sort of tool form.
+
+Additional example tools integrated into Galaxy:
+
+1. [cummerbund](https://github.com/galaxyproject/tools-devteam/tree/master/tools/cummerbund)
+2. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
+3. [minfi]()
 
 ### Tool Wrapping with One File
 
@@ -368,16 +376,18 @@ Dataset collections gives users the ability to represent complex datasets and ru
 
 Some examples for tools based on dataset collections are:
 
-1. Minfi
-2. Sickle
+1. [Minfi](link)
+2. [Sickle](link)
 
 ### CDATA
 
 In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data. There is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which. For example, "<" and "&" would be represented by "&lt;" and "&amp;", respectively. Using CDATA is a good idea if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
 
-#### Publishing tools to IUC for Code review
+### Publishing tools to IUC for Code review
 
-Once you are happy with your tools, you can publish it on Galaxy in many ways. List them all here:
+Once you are happy with your tools, tools can be published on Galaxy in many ways. List them all here:
+
+**TO DO **
 
 ### Best Practices for R/Bioconductor Tool Integration
 
@@ -434,8 +444,7 @@ if (options$verbose) {
 }
 ```
 
-#### Feature soon to be available : Conda dependency resolution for R/Bioconductor packages integrated in Galaxy.
-
+#### Conda dependency resolution for R/Bioconductor packages integrated in Galaxy.
 
 ### R/Bioconductor tool wrapping tips
 
@@ -462,17 +471,6 @@ tool_dependency_dir = /Users/nturaga/Documents/workspace/minfi_galaxy/shed_tools
 #### Maintain it for future versions
 
 #### Use the python package Rpy2 for your tool wrappers
-
-
---------
-
-R/Bioconductor Tools Available Through Galaxy
---------------
-
-1. [cummerbund](https://github.com/galaxyproject/tools-devteam/tree/master/tools/cummerbund)
-2. [DESeq2](https://github.com/galaxyproject/tools-iuc/tree/master/tools/deseq2)
-3. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
-4. [minfi]()
 
 --------
 
