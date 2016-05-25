@@ -231,7 +231,12 @@ When the *Tool definition file* and *Custom R script* are complete, the last ste
 
 3. Restart Galaxy.
 
+### Tool Testing
+
+Do stuff.
+
 ----------
+
 
 Handling R/Bioconductor Dependencies
 ---------------
@@ -450,13 +455,7 @@ if (options$verbose) {
 
 #### Exit codes for R tools
 
-#### How to handle inputs and outputs through getopt package
-
 #### How to avoid the x11 trap
-
-#### Leverage Planemo to build and test your tools
-
-#### Test Test and Test some more
 
 #### R session running on your galaxy
 
