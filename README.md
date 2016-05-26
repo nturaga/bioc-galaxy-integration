@@ -187,19 +187,32 @@ cat("\n success \n")
 Rscript my_r_tool.R --input 'input.csv' --output 'output.csv'
 ```
 
-If we look at the script run by the Galaxy tool, it looks very similar. This can be found if you click on the information *i* icon on your job run.
+If we look at the script run by the Galaxy tool, it looks very similar. This can be found if you click on the information (**i**) icon on your job run. These icons are highlighted in the image below.
 
 <img src="images/information.png" >
 
 ```
-Job Command-Line:   Rscript /path/to/directory/my_r_tool/my_r_tool.R
---input /path/to/directory/galaxy/database/files/000/dataset_243.dat
---output /path/to/directory/galaxy/database/files/000/dataset_249.dat
+Job Command-Line:   Rscript /Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R
+--input /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_243.dat
+--output /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_249.dat
 ```
 
-Print statements in *Custom R scripts* should be sent to standard output (stdout) and are shown in the image below. Do not print logs to standard error (stderr), because this will be interpreted as a tool error in Galaxy.
+Print statements in *Custom R scripts* should be sent to standard output (stdout) and are shown in the image below. Placing print statements strategically in the *Custom R script* is useful for the user to interpret the tools performance. The example in the image below is taken from the script ```my_r_tool.R```. 
+
+```
+23 cat("\n input: ",options$input)
+24 cat("\n output: ",options$output)
+```
+
+```
+36 cat("\n success \n")
+```
 
 <img src="images/stdout.png" >
+
+
+Do not print logs to standard error (stderr), because this will be interpreted as a tool error in Galaxy.
+
 
 ------------
 
