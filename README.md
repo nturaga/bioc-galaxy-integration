@@ -254,7 +254,7 @@ Do stuff.
 Handling R/Bioconductor Dependencies
 ---------------
 
-Dependency resolution for R/Bioconductor tools in Galaxy is made easy by a [script](https://github.com/bioarchive/aRchive_source_code/blob/master/get_galaxy_tool_dependencies.py) available through the bioarchive github repository. The script is under active development. Updates can be found in branch [bioarchive/get_tool_deps_fox](https://github.com/bioarchive/aRchive_source_code/tree/get_tool_deps_fix).
+Dependency resolution for R/Bioconductor tools in Galaxy is made easy by a [script](https://github.com/bioarchive/aRchive_source_code/blob/master/get_galaxy_tool_dependencies.py) available through the bioarchive github repository. The script is under active development. Updates can be found in branch [bioarchive/get_tool_deps_fix](https://github.com/bioarchive/aRchive_source_code/tree/get_tool_deps_fix).
 
 R/Bioconductor dependencies (with exact versions) needed to run MY_R_TOOL should be listed in a file called ```tool_dependencies.xml```. Galaxy will automatically set up an R environment with these dependencies.
 
