@@ -54,13 +54,13 @@ An Overview of Galaxy Tools
 
 ### Quick summary
 
-A Galaxy tool is defined by a **Tool definition file** or **Tool wrapper** in XML format and has three important components:
+A Galaxy tool is defined by two components. The first component is a **Tool definition file** (or **Tool wrapper**) in XML format. This file contains three important parts:
 
 1. *Inputs* - Single or multiple input files
 2. *Outputs* - Single or multiple output files
 3. *Command* - The command which needs to be run by Galaxy via the R interpreter
 
-The final component needed for integrating an R/Bioconductor tool is a **Custom R script** which uses the R/Bioconductor tool to perform an analysis.
+The second component needed for integrating an R/Bioconductor tool is a **Custom R script** which uses the R/Bioconductor tool to perform an analysis.
 
 Some excellent resources for more information:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
@@ -82,7 +82,7 @@ Galaxy Tool Components
 
 ### Directory structure
 
-The *Tool definition file* and *Custom R script* go into their own directory (*e.g.* ```my_r_tool```). The directory structure for the R/Bioconductor tool ```my_r_tool``` would look like:
+The *Tool definition file* and *Custom R script* exist in their own directory (*e.g.* ```my_r_tool```). The directory structure for the R/Bioconductor tool ```my_r_tool```, for example, would look like the following:
 
 ```
 my_r_tool/
