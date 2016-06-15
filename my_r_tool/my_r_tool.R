@@ -1,3 +1,6 @@
+## How to run tool
+# $Rscript my_r_tool.R --input input.csv --output output.csv
+
 # Setup R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
 # We need to not crash galaxy with an UTF8 error on German LC settings.
