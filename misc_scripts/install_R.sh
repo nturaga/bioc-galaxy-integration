@@ -1,5 +1,7 @@
-sudo apt-get install r-base-core
+sudo apt-get install libgsl-dev
 
-wget https://github.com/nturaga/bioc-galaxy-integration/blob/master/misc_scripts/install_packages.R
+brew install gsl
 
-R CMD batch install.packages.R
+sudo Rscript --slave --no-save --no-restore-history -e "source('http://bioconductor.org/biocLite.R'); biocLite('motifbreakR'); biocLite('Rgraphviz');"
+
+Rscript --slave --no-save --no-restore-history -e "library('motifbreakR')"
