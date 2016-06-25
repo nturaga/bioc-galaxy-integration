@@ -70,10 +70,10 @@ Some excellent resources for more information:
 
 Based on the nature of how the inputs and outputs are designed, a Galaxy tool can have multiple inputs and multiple outputs. This gives the option for a Galaxy tool to have the following configurations:
 
-1. Single input with Single Output (*e.g.* INSERT EXAMPLE WITH LINK)
-2. Single input with Multiple Outputs (*e.g.* INSERT EXAMPLE WITH LINK)
-3. Multiple inputs with Single Output (*e.g.* INSERT EXAMPLE WITH LINK)
-4. Multiple inputs with Multiple Outputs (*e.g.* INSERT EXAMPLE WITH LINK)
+1. Single input with Single Output 
+2. Single input with Multiple Outputs 
+3. Multiple inputs with Single Output 
+4. Multiple inputs with Multiple Outputs 
 
 ---------------
 
