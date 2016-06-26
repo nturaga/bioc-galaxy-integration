@@ -246,7 +246,9 @@ When the *Tool definition file* and *Custom R script* are complete, the last ste
 
 ### Tool Testing
 
-Do stuff.
+Including test cases for you tools is always a good idea. Plots should be saved as PNG files, as these are easier to test. 
+
+More details about tool testing [here](https://wiki.galaxyproject.org/Admin/Tools/WritingTests)
 
 ----------
 
