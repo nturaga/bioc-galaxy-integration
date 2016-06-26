@@ -1,4 +1,4 @@
-## Run script with "Rscript my_r_tool_again.R --verbose TRUE --input input.csv"
+## Run script with "Rscript my_r_tool_verbose.R --verbose TRUE --input input.csv"
 
 # Setup R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
