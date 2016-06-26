@@ -403,11 +403,6 @@ Some examples for tools based on dataset collections are:
 
 In an XML document or external parsed entity, a CDATA section is a section of element content that is marked for the parser to interpret purely as textual data, not as markup. A CDATA section is merely an alternative syntax for expressing character data. There is no semantic difference between character data that manifests as a CDATA section and character data that manifests as in the usual syntax in which. For example, "<" and "&" would be represented by ```&lt;``` and ```&amp;``` respectively. Using CDATA is a good idea if you don't want to use the usual syntax. It is also a [best practice](https://galaxy-iuc-standards.readthedocs.org/en/latest/best_practices/tool_xml.html#command-tag).
 
-### Publishing tools to IUC for Code review
-
-Once you are happy with your tools, tools can be published on Galaxy in many ways. List them all here:
-
-**TO DO **
 
 ### Best Practices for R/Bioconductor Tool Integration
 
