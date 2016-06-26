@@ -287,9 +287,9 @@ Other solutions being actively developed by Galaxy for tool dependency resolutio
 Handling RData files
 -------------
 
-Directly using RData files poses security risks for Galaxy. But, if you must use it, launching a docker container or a VM to run these custom tools which take in RData Files as inputs and outputs is ideal.
+Directly using RData files poses security risks for Galaxy. If you must use RData files, consider launching a docker container or a VM to run custom tools which require RData files.
 
-RData can be used to aggregate data in file, load it into your R session via your Rscript and then the outputs can be either another RData file or different formats supported by Galaxy.
+RData files are useful for aggregating multiple datasets into a single file. The RData file can then be loaded into an R session via an Rscript where all the data can be accessed by any R tools. Outputs from these tools can be either RData files or in other formats supported by Galaxy.
 
 --------------
 
