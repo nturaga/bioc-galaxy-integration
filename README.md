@@ -15,7 +15,6 @@ NOTE: Galaxy is language agnostic, so tools written in different languages can b
 Table of contents
 --------------
 
-<!-- MarkdownTOC -->
 
 - [An Overview of Galaxy Tools](#an-overview-of-galaxy-tools)
     - [Quick summary](#quick-summary)
@@ -45,7 +44,6 @@ Table of contents
 - [Some tools in Bioconductor which are available through Galaxy](#some-tools-in-bioconductor-which-are-available-through-galaxy)
 - [Join the Galaxy Community](#join-the-galaxy-community)
 
-<!-- /MarkdownTOC -->
 
 ------------
 
@@ -463,11 +461,15 @@ if (options$verbose) {
 
 #### Conda dependency resolution for R/Bioconductor packages integrated in Galaxy.
 
-### R/Bioconductor tool wrapping tips
+New feature coming soon.
 
 #### Exit codes for R tools
 
-#### How to avoid the x11 trap
+Let Galaxy do it for you in the command tag
+
+```
+<command detect_errors="exit_code">
+```
 
 #### R session running on your galaxy
 
@@ -477,11 +479,9 @@ You local machine is going to have you R_HOME set to your default R installation
 tool_dependency_dir = /Users/nturaga/Documents/workspace/minfi_galaxy/shed_tools
 ```
 
-#### Interactive tours for your tool
-
-#### Maintain it for future versions
-
 #### Use the python package Rpy2 for your tool wrappers
+
+Coming soon.
 
 --------
 
