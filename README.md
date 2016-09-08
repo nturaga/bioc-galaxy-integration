@@ -93,6 +93,8 @@ my_r_tool/
 
 ### Tool definition file
 
+The tool definition file an a XML file that informs Galaxy how to handle your input/output and variable parameters in your R script. The CDATA section is where you provide a python version of your R script. Each input parameter should have its own entry. The inputs section is where you establish how your variable parameters appear in the Galaxy GUI. For each input variable parameter you establish in this file, you should also establish it in the R scipt file where you establish variable parmeters as well as in the CDATA section. The output section is where you establish the name and format of your output. The help section is where you can provide text to describe your tool and any other information you deem will be of use to the user. 
+
 The example XML code below represents the minimal structure of a Galaxy *Tool definition file* (```my_r_tool.xml```) to call the R/Bioconductor tool MY_R_TOOL. Another example *Tool definition file* can be found [here](https://wiki.galaxyproject.org/Tools/SampleToolTemplate?action=show&redirect=Admin%2FTools%2FExampleXMLFile).
 
 ```
@@ -113,7 +115,7 @@ The example XML code below represents the minimal structure of a Galaxy *Tool de
         </test>
     </tests>
     <help><![CDATA[
-        Write you tool help section here
+        Write your tool help section here
     ]]></help>
     <citations>
         <!-- Sample citation to the original Galaxy paper -->
@@ -137,6 +139,7 @@ The full path to the Galaxy tool is set in the *Tool definition file*. For examp
 
 ### Custom R script
 
+This file contains required information (first six commands), your variable parameters, and the actual R commands your tool will run. 
 Below is an example of a *Custom R script* (```my_r_tool.R```). It sets the first column of an input CSV file to zeros and saves the output as another CSV file.
 
 ```{r}
@@ -146,26 +149,31 @@ options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr(
 # We need to not crash galaxy with an UTF8 error on German LC settings.
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
-# Import library
+# Import libraries your R script uses
 library("getopt")
 options(stringAsfactors = FALSE, useFancyQuotes = FALSE)
 # Take in trailing command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
-# get options, using the spec as defined by the enclosed list.
-# we read the options from the default: commandArgs(TRUE).
+# Parse options
+options = getopt(option_specification);
+
+# These are the variable paramters of your R script
+# getopt will use the information provided for each variable to populate variable parameters of your R script 
+# For each variable, establish a name, single letter name, the number 2 (?), and the input type (character, integer, float, etc). 
 option_specification = matrix(c(
   'input', 'i', 2, 'character',
   'output', 'o', 2, 'character'
 ), byrow=TRUE, ncol=4);
 
-# Parse options
-options = getopt(option_specification);
 
 # Print options to see what is going on
+# This information will be viewable with the output file (in your history)
 cat("\n input: ",options$input)
 cat("\n output: ",options$output)
 
+
+# The following section contains your R script
 
 # READ in your input file
 inp = read.csv(file=options$input, stringsAsFactors = FALSE)
@@ -497,5 +505,7 @@ Coming soon.
 7. [https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
 
 [![](https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent.png)](https://github.com/galaxyproject)
+
+
 
 **NOTE** These tool design models will be constantly improving, if you see any changes that need to be made, please send me a pull request with the material or file an issue. Help from the community to improve this document is always welcome.
