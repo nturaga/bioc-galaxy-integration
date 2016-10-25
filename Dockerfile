@@ -9,7 +9,7 @@ FROM r-base:latest
 
 ## Install pip, git
 RUN apt-get update \
-	&& apt-get install -y python-pip r-base git-all
+	&& apt-get install -y python-pip git vim curl
 
 ## Install local Galaxy
 RUN git clone https://github.com/galaxyproject/galaxy.git
@@ -26,10 +26,23 @@ RUN Rscript -e "install.packages('getopt')"
 RUN Rscript -e "biocLite('affy')"
 RUN Rscript -e "biocLite('seqTools')"
 
-## ======= TESTING ======= ##
+EXPOSE :80
 
-## Add RStudio binaries to PATH
-# ENV PATH /usr/lib/rstudio-server/bin/:$PATH
+## Copy tool_conf.xml for editing
+RUN cp /galaxy/config/tool_conf.xml.sample /galaxy/config/tool_conf.xml
 
-#ADD install.R /tmp/
-#RUN R -f /tmp/install.R
+## Upload galaxy.ini from host
+## This file contains changes to host/port for viewing Galaxy in browser
+ADD galaxy.ini /galaxy/config/galaxy.ini
+
+## Upload example tool files
+RUN mkdir /galaxy/tools/mytools
+RUN mkdir /galaxy/tools/mytools/test_data
+ADD my_seqTools_tool.R /galaxy/tools/mytools/my_seqTools_tool.R
+ADD my_seqTools_tool.xml /galaxy/tools/mytools/my_seqTools_tool.xml
+ADD tool_dependencies.xml /galaxy/tools/mytools/tool_dependencies.xml
+ADD test_data/test_input.fq.gz /galaxy/tools/mytools/test_data/test_input.fq.gz
+ADD test_data/test_output.txt /galaxy/tools/mytools/test_data/test_output.txt
+
+## Automatically run Galaxy
+#CMD ["sh /galaxy/run.sh"]
