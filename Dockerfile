@@ -33,25 +33,25 @@ RUN Rscript -e "biocLite('seqTools')"
 EXPOSE :80
 
 ## Copy tool_conf.xml for editing
-ADD tool_conf.xml /galaxy/config/tool_conf.xml
+ADD paper_supp_files/tool_conf.xml /galaxy/config/tool_conf.xml
 
 ## Upload galaxy.ini from host
 ## This file contains changes to host/port for viewing Galaxy in browser
-ADD galaxy.ini /galaxy/config/galaxy.ini
+ADD paper_supp_files/galaxy.ini /galaxy/config/galaxy.ini
 
 ## Make new tool directory
 RUN mkdir /galaxy/tools/mytools
 RUN mkdir /galaxy/tools/mytools/test_data
 
 ## Upload seqTools example files
-ADD my_seqTools_tool.R /galaxy/tools/mytools/my_seqTools_tool.R
-ADD my_seqTools_tool.xml /galaxy/tools/mytools/my_seqTools_tool.xml
-ADD tool_dependencies.xml /galaxy/tools/mytools/tool_dependencies.xml
+ADD paper_supp_files/my_seqTools_tool.R /galaxy/tools/mytools/my_seqTools_tool.R
+ADD paper_supp_files/my_seqTools_tool.xml /galaxy/tools/mytools/my_seqTools_tool.xml
+ADD paper_supp_files/tool_dependencies.xml /galaxy/tools/mytools/tool_dependencies.xml
 
 ## Upload affy example files
-ADD my_affy_tool.R /galaxy/tools/mytools/my_affy_tool.R
-ADD my_affy_tool.xml /galaxy/tools/mytools/my_affy_tool.xml
-ADD my_affy_tool_Case2.xml /galaxy/tools/mytools/my_affy_tool_Case2.xml
+ADD paper_supp_files/my_affy_tool.R /galaxy/tools/mytools/my_affy_tool.R
+ADD paper_supp_files/my_affy_tool.xml /galaxy/tools/mytools/my_affy_tool.xml
+ADD paper_supp_files/my_affy_tool_Case2.xml /galaxy/tools/mytools/my_affy_tool_Case2.xml
 
 ## Automatically run Galaxy
 #CMD ["sh /galaxy/run.sh"]
