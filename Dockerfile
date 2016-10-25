@@ -12,7 +12,7 @@ RUN apt-get update \
 	&& apt-get install -y python-pip r-base git-all
 
 ## Install local Galaxy
-RUN git clone -b release_16.07 https://github.com/galaxyproject/galaxy.git
+RUN git clone https://github.com/galaxyproject/galaxy.git
 
 ## Install planemo
 RUN pip install planemo
