@@ -1,8 +1,8 @@
-# Dockerfile for Bioc-galaxy-integration using planemo
+# Dockerfile for R/Bioc-galaxy-integration using Planemo
 #
 # Maintainer: Nitesh Turaga 
-# email: nitesh.turaga at gmail dot com
+# email: nitesh dot turaga at gmail dot com
 
 # PULL base image
-FROM ubuntu:14.04
+FROM r-base:latest
 
