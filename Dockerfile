@@ -4,6 +4,10 @@
 # Maintainer: Nitesh Turaga 
 # email: nitesh dot turaga at gmail dot com
 
+# Build with: docker build -t <name>/testdocker:v2 .
+# Run with: docker run -ti -p 8080:80 <name>/testdocker:v2 /bin/bash
+# Galaxy will be accessible on the host on 127.0.0.1:8080
+
 # PULL base image
 FROM r-base:latest
 
@@ -29,20 +33,26 @@ RUN Rscript -e "biocLite('seqTools')"
 EXPOSE :80
 
 ## Copy tool_conf.xml for editing
-RUN cp /galaxy/config/tool_conf.xml.sample /galaxy/config/tool_conf.xml
+ADD tool_conf.xml /galaxy/config/tool_conf.xml
 
 ## Upload galaxy.ini from host
 ## This file contains changes to host/port for viewing Galaxy in browser
 ADD galaxy.ini /galaxy/config/galaxy.ini
 
-## Upload example tool files
+## Make new tool directory
 RUN mkdir /galaxy/tools/mytools
 RUN mkdir /galaxy/tools/mytools/test_data
+
+## Upload seqTools example files
 ADD my_seqTools_tool.R /galaxy/tools/mytools/my_seqTools_tool.R
 ADD my_seqTools_tool.xml /galaxy/tools/mytools/my_seqTools_tool.xml
 ADD tool_dependencies.xml /galaxy/tools/mytools/tool_dependencies.xml
-ADD test_data/test_input.fq.gz /galaxy/tools/mytools/test_data/test_input.fq.gz
-ADD test_data/test_output.txt /galaxy/tools/mytools/test_data/test_output.txt
+
+## Upload affy example files
+ADD my_affy_tool.R /galaxy/tools/mytools/my_affy_tool.R
+ADD my_affy_tool.xml /galaxy/tools/mytools/my_affy_tool.xml
+ADD my_affy_tool_Case2.xml /galaxy/tools/mytools/my_affy_tool_Case2.xml
 
 ## Automatically run Galaxy
 #CMD ["sh /galaxy/run.sh"]
+
