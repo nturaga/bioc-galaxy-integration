@@ -1,0 +1,26 @@
+<tool id="my_affy_tool" name="Extract Expression" version="0.1.0">
+    <description> values from CEL Agilent microarray data (Case 2)</description>
+    <requirements>
+        <requirement type="package" version="3.2.1">R</requirement>
+        <requirement type="package" version="1.20.0">getopt</requirement>
+        <requirement type="package" version="1.50.0">affy</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+        Rscript /galaxy/tools/mytools/my_affy_tool.R --input $test_input --output $test_output
+    ]]></command>
+    <inputs>
+        <param type="data" name="test_input" format="CEL" />
+    </inputs>
+    <outputs>
+        <data name="test_output" format="txt" />
+    </outputs>
+    <help><![CDATA[
+        This tool reads in Agilent CEL data and outputs probe expression values.
+    ]]></help>
+    <citations>
+        <citation type="doi">10.1093/bioinformatics/btg405</citation>
+    </citations>
+</tool>
