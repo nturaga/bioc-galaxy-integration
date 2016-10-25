@@ -18,7 +18,7 @@ Table of contents
 
 - [An Overview of Galaxy Tools](#an-overview-of-galaxy-tools)
     - [Quick summary](#quick-summary)
-    - [Types of Galaxy Tools](#types-of-galaxy-tools)
+    - [Types of Galaxy tools](#types-of-galaxy-tools)
 - [Galaxy Tool Components](#galaxy-tool-components)
     - [Directory structure](#directory-structure)
     - [Tool definition file](#tool-definition-file)
@@ -29,19 +29,15 @@ Table of contents
 - [How Galaxy Tool Components Work Together](#how-galaxy-tool-components-work-together)
     - [Tool execution](#tool-execution)
     - [Tool integration into Galaxy](#tool-integration-into-galaxy)
+    - [Tool testing](#tool-testing)
 - [Handling R/Bioconductor Dependencies](#handling-rbioconductor-dependencies)
 - [Handling RData files](#handling-rdata-files)
 - [Supplementary Information](#supplementary-information)
     - [DESeq2: a model for Galaxy tool integration](#deseq2-a-model-for-galaxy-tool-integration)
-    - [Tool Wrapping with One File](#tool-wrapping-with-one-file)
-    - [Dataset collections for Bioconductor tools](#dataset-collections-for-bioconductor-tools)
+    - [Tool wrapping with one file](#tool-wrapping-with-one-file)
+    - [Dataset collections for R/Bioconductor tools](#dataset-collections-for-rbioconductor-tools)
     - [CDATA](#cdata)
-    - [Publishing tools to IUC for Code review](#publishing-tools-to-iuc-for-code-review)
-    - [Best Practices for R/Bioconductor Tool Integration](#best-practices-for-rbioconductor-tool-integration)
-    - [R/Bioconductor tool wrapping tips](#rbioconductor-tool-wrapping-tips)
-    - [Publishing tools to IUC for Code review (Recommended)](#publishing-tools-to-iuc-for-code-review-recommended)
-    - [Others]
-- [Some tools in Bioconductor which are available through Galaxy](#some-tools-in-bioconductor-which-are-available-through-galaxy)
+    - [Best practices for R/Bioconductor tool integration](#best-practices-for-rbioconductor-tool-integration)
 - [Join the Galaxy Community](#join-the-galaxy-community)
 
 
@@ -250,7 +246,7 @@ When the *Tool definition file* and *Custom R script* are complete, the last ste
 
 3. Restart Galaxy.
 
-### Tool Testing
+### Tool testing
 
 Including test cases for you tools is always a good idea. Plots should be saved as PNG files, as these are easier to test. 
 
@@ -290,7 +286,7 @@ Other solutions being actively developed by Galaxy for tool dependency resolutio
 
 ---------------
 
-Handling RData files
+Handling RData Files
 -------------
 
 Directly using RData files poses security risks for Galaxy. If you must use RData files, consider launching a docker container or a VM to run custom tools which require RData files.
@@ -312,9 +308,8 @@ Additional example tools integrated into Galaxy:
 
 1. [cummerbund](https://github.com/galaxyproject/tools-devteam/tree/master/tools/cummerbund)
 2. [DEXseq](https://github.com/galaxyproject/tools-iuc/tree/master/tools/dexseq)
-3. [minfi]()
 
-### Tool Wrapping with One File
+### Tool wrapping with one file
 
 Another way to write a Galaxy tool wrapper is to put the *Custom R script* directly into the XML *Tool definition file* using the ```<configfile>``` tag. This way, developers can avoid having separate *Tool definition file* and *Custom R script* files.
 
@@ -398,7 +393,7 @@ There are pros and cons to this approach:
 
 2. Debugging is much harder.
 
-### Dataset Collections for R/Bioconductor Tools
+### Dataset collections for R/Bioconductor tools
 
 Dataset collections gives users the ability to represent complex datasets and run tools on multiple samples all at once. Dataset collections are specially useful for tools which run on multiple files at the same time, the input would then comprise of a "collection of files".
 
@@ -411,7 +406,7 @@ Some examples for tools based on dataset collections are:
 
 Use CDATA to represent character data. In markup languages such as XML, a CDATA section represents content that should be interpreted purely as character data. Using CDATA is highly recommended, for example, for text in the help and command sections of the Tool definition file.
 
-### Best Practices for R/Bioconductor Tool Integration
+### Best practices for R/Bioconductor tool integration
 
 The *Custom R script* written for a Galaxy tool has a minimal set of requirements. Below is a non-exhaustive list of additional features that are suggested for *Custom R scripts*:
 
@@ -449,7 +444,7 @@ suppressPackageStartupMessages({
 })
 ```
 
-#### Short title for this
+#### Toggle verbose outputs
 
 Toggle verbose outputs via the *Custom R script* and getopt package to allows for easier debugging. You can also set intermittent status messages while your script is processing large datasets. This makes your R script usable outside of Galaxy as well. The script inside the file ```my_r_tool_again.R``` has a list of options which are better defined.
 
@@ -488,7 +483,7 @@ tool_dependency_dir = /Users/nturaga/Documents/workspace/minfi_galaxy/shed_tools
 
 #### Use the python package Rpy2 for your tool wrappers
 
-Coming soon.
+Coming soon!
 
 --------
 
