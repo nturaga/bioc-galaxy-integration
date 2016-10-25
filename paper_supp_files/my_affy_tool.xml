@@ -1,0 +1,22 @@
+<tool id="my_affy_tool" name="Extract expression" version="0.1.0">
+    <requirements>
+        <requirement type="package" version="3.2.1">R</requirement>
+        <requirement type="package" version="1.20.0">getopt</requirement>
+        <requirement type="package" version="1.50.0">affy</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+        Rscript /galaxy/tools/mytools/my_affy_tool.R --input $test_input --output $test_output 
+    ]]></command>
+    <inputs>
+        <param type="data" name="test_input" format="CEL" />
+    </inputs>
+    <outputs>
+        <data name="test_output" format="txt" />
+    </outputs>
+    <help><![CDATA[
+        TODO: Fill in help.
+    ]]></help>
+</tool>
