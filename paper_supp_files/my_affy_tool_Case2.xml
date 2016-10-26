@@ -1,4 +1,4 @@
-<tool id="my_affy_tool" name="Extract Expression" version="0.1.0">
+<tool id="my_affy_tool2" name="Extract Expression" version="0.1.0">
     <description> values from CEL Agilent microarray data (Case 2)</description>
     <requirements>
         <requirement type="package" version="3.2.1">R</requirement>
