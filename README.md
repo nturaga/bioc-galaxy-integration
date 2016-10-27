@@ -68,7 +68,7 @@ The third component needed for integrating an R/Bioconductor tool is a **Tool de
 
 The fourth component needed for integrating an R/Bioconductor tool is a **Test data** directory which includes data file(s) intended as input to test the R script and any expected output data file(s). 
 
-An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [Kmer_enumerate_tool](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
+An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [Kmer_enumerate_tool](https://github.com/nturaga/bioc-galaxy-integration/Kmer_enumerate_tool). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
 
 Additional resources for Galaxy tool development can be found here:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
