@@ -1,25 +1,29 @@
-## Run script with "Rscript my_r_tool_verbose.R --verbose TRUE --input input.csv"
+## How to execute this tool
+## $Rscript my_r_tool_verbose.R --verbose TRUE --input input.csv
 
-# Setup R error handling to go to stderr
-options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
-# We need to not crash galaxy with an UTF8 error on German LC settings.
+# Send R errors to stderr
+options(show.error.messages = F, error = function(){cat(geterrmessage(), file = stderr()); q("no", 1, F)})
+
+# Avoid crashing Galaxy with an UTF8 error on German LC settings
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
 # Import library
-# NOTE: Its ok to load getopt without supressing message because there are 
-#       no logs generated through this import.
-library("getopt") 
+# NOTE: It is OK to load getopt without supressing message because
+#       there are no logs generated through this import.
+library("getopt")
+
 options(stringAsfactors = FALSE, useFancyQuotes = FALSE)
+
 # Take in trailing command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
-# get options, using the spec as defined by the enclosed list.
-# we read the options from the default: commandArgs(TRUE).
+# Get options using the spec as defined by the enclosed list
+# Options are read from the default: commandArgs(TRUE)
 option_specification = matrix(c(
   "help", "h", 0, "logical",
   "verbose", "v", 2, "logical",
-  'input', 'i', 2, 'character'), 
-  byrow=TRUE, ncol=4);
+  'input', 'i', 2, 'character'
+), byrow=TRUE, ncol=4);
 
 # Parse options
 options = getopt(option_specification);
@@ -37,7 +41,7 @@ if (!is.null(options$help)) {
 
 # cat ("verbose type", typeof(verbose))
 
-# Print options to see what is going on
+# Print options to stderr for debugging
 if (!is.null(verbose)) {
     cat("\n verbose: ",options$verbose)
     cat("\n input: ",options$input)
@@ -49,14 +53,13 @@ if (!is.null(verbose)) {
 # READ in your input file
 inp = read.csv(file=options$input, stringsAsFactors = FALSE)
 	
-# Do something with you input
-# This one changes every value in the first column to 0
+# Change every value in the first column to 0
 inp$V1 = c(rep(0,10))
 
-# Save your output as the file you want to Galaxy to recognize.
+# Write output to new file which will be recognized by Galaxy
 write.csv(inp, file="output.csv",row.names = FALSE)
 
-# # Print on success
+# Print on success
 if (!is.null(verbose)) {
     cat("\n === Success ===\n")
 }
