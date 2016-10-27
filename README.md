@@ -241,33 +241,13 @@ This section contains the R command(s) needed to execute the R/Bioconductor tool
 Rscript Kmer_enumerate_tool.R --input 'Kmer_enumerate_test_input.fq' --input 2 --output 'Kmer_enumerate_test_output.txt'
 ```
 
-The command that executes the R script in the command-line (above) looks very similar to the command run by the Galaxy tool (below). The Galaxy command can be found by clicking the information (**i**) icon in the job run (highlighted in the image below).
-
-TODO: update image and Job Command-Line output
-
-<img src="images/information.png" >
-
-```
-Job Command-Line:   Rscript /Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool.R
---input /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_243.dat
---output /Users/nturaga/Documents/PR_testing/galaxy/database/files/000/dataset_249.dat
-```
-
-Print statements in the *Custom R file* should be sent to stdout and are shown in the image below. Placing print statements strategically in the *Custom R file* is useful for interpretting the tool's performance. The following snippets are from the `Kmer_enumerate_tool.R` *Custom R file*:
-
-```{r}
-cat("\n input file: ",options$input1)
-cat("\n kmer: ",options$input2)
-cat("\n output file: ",options$output)
-```
+Print statements in the *Custom R file* should be sent to stdout and are shown in the image below. Placing print statements strategically in the *Custom R file* is useful for interpretting the tool's performance. The following snippet is from the Kmer_enumerate ` *Custom R file*:
 
 ```{r}
 cat("\n Successfully counted kmers in fastq file. \n")
 ```
 
-TODO: update image
-
-<img src="images/stdout.png" >
+<img src="images/0_stdout.png" >
 
 ### Tool dependency file
 
@@ -298,12 +278,14 @@ The following steps outline how to integrate the new R/Bioconductor tool into Ga
 2. Modify `tool_conf.xml` by adding a new section under which the integrated tool will exist. The value given to "name" in the Tool configuration file will appear in the tool panel, and the value given to "name" in the *Tool definition file* will appear under this new section. Provide the full path to the *Tool definition file* if the tool directory is not in `$GALAXY_ROOT/tools/`. Otherwise, the relative path is sufficient.
 
 	```{xml}
-	<section name="Kmer enumerate" id="kmer_enumerate">
+	<section name="My Tools" id="kmer_enumerate">
 		<tool file="/path/to/Kmer_enumerate_tool/Kmer_enumerate_tool.xml" />
 	</section>
 	```
 
-3. Restart Galaxy to integrate the modified `tool_conf.xml file`.
+3. Restart Galaxy to integrate the modified `tool_conf.xml file`. The newly integrated tool now appears in the tool panel under the new section name.
+
+<img src="images/2_kmer_enumerate_in_tool_panel.png" >
 
 Additional details about how to add custom tools to the Galaxy tool panel can be found [here](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial). A new command, `bioc_tool_init`, has recently been added to the [Planemo](https://planemo.readthedocs.org/en/latest/) suite of command-line tools for building and publishing Galaxy tools. The `bioc_tool_init` command semi-automates generation of the *Tool definition file* directly from a *Custom R file*. More about this command is detailed below.
 
@@ -315,7 +297,17 @@ Additional details about Galaxy tool testing can be found [here](https://wiki.ga
 
 ### Tool execution
 
-First, any input files (*e.g.* `Kmer_enumerate_tool_test_input.fq`) should be uploaded to Galaxy. The appropriate tool should be selected from the tool panel, and any input files or parameters should be selected. When the tool executes, input files and parameters are passed by the `--input` argument in the *Tool definition file* to the *Custom R file*. The *Custom R file* executes and sends the results back to the *Tool definition file* to be saved according to the value(s) set for `--output`. The output file is then available for viewing in the Galaxy history panel.
+First, any input files (*e.g.* `Kmer_enumerate_test_input.fq`) should be uploaded to Galaxy.
+
+<img src="images/3_upload_input_data_to_galaxy.png" >
+
+The appropriate tool should be selected from the tool panel, and any input files or parameters should be selected. 
+
+<img src="images/4_select_tool_update_parameters.png" >
+
+When the tool executes, input files and parameters are passed by the `--input` argument in the *Tool definition file* to the *Custom R file*. The *Custom R file* executes and sends the results back to the *Tool definition file* to be saved according to the value(s) set for `--output`. The output file is then available for viewing in the Galaxy history panel.
+
+<img src="images/5_check_output.png" >
 
 Unlike executing R scripts in the command-line, executing R/Bioconductor tools in Galaxy does not require explicitly setting the working directory. By default, Galaxy creates and executes tools within a job working directory. Therefore, R commands like `setwd()` and `getwd()` should be avoided in *Custom R files*.
 
@@ -355,7 +347,7 @@ Best Practices for R/Bioconductor Tool Integration
 
 ### Pass command-line arguments with flags
 
-In the example *Custom R script* (`my_r_tool.R`), the R package `getopt` is used to add command line arguments with flags. This can also be done in other ways. For example, using ```args = commandArgs(trailingOnly=TRUE)``` and then running ```Rscript --vanilla randomScript.R input.csv output.csv``` which doesn't give you the option of defining flags. Also, the package `optparse` can be used for a more pythonic style. Check out this [blog](http://www.r-bloggers.com/passing-arguments-to-an-r-script-from-command-lines) for more details on how to pass command line arguemnts in R.
+In the example *Custom R file* `Kmer_enumerate_tool.R`, the R package `getopt` is used to add command line arguments with flags. This can also be done in other ways. For example, using ```args = commandArgs(trailingOnly=TRUE)``` and then running ```Rscript --vanilla randomScript.R input.csv output.csv``` which doesn't give you the option of defining flags. Also, the package `optparse` can be used for a more pythonic style. Check out this [blog](http://www.r-bloggers.com/passing-arguments-to-an-r-script-from-command-lines) for more details on how to pass command line arguemnts in R.
 
 ###  Implement error handling
 
