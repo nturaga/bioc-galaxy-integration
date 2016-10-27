@@ -26,7 +26,7 @@ option_specification = matrix(c(
 # Parse options
 options = getopt(option_specification);
 
-# Print options to stderr
+# Print options to stdout
 # Useful for debugging
 #cat("\n input file: ",options$input1)
 #cat("\n kmer: ",options$input2)
