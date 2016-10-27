@@ -1,5 +1,5 @@
 ## How to run tool
-# Rscript my_seqTools_tool.R --input1 input1.fq --input2 input2 --output output.txt
+# Rscript Kmer_enumerate_tool.R --input1 input1.fq --input2 input2 --output output.txt
 
 # Set up R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
