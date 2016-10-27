@@ -1,7 +1,7 @@
 Writing Galaxy tool wrappers for R and Bioconductor packages
 ===================
 
-This tutorial outlines how to integrate R/Bioconductor tools into Galaxy. **It is aimed at both novice and experienced R/Bioconductor and Galaxy tool developers.** [Bioconductor](https://www.bioconductor.org/) represents a large collection of R tools developed for the analysis of high-throughput genomic data. The goal of this tutorial is to guide developers through the steps required to integrate R/Bioconductor tools into the Galaxy platform. Galaxy is language agnostic, so tools written in different languages can be integrated into Galaxy. This tutorial specifically focuses on R/Bioconductor tool integration.
+This tutorial outlines how to integrate R/Bioconductor tools into Galaxy. **It is aimed at both novice and experienced R/Bioconductor and Galaxy tool developers.** [Bioconductor](https://www.bioconductor.org/) represents a large collection of [R](https://cran.r-project.org/) tools developed for the analysis of high-throughput genomic data. The goal of this tutorial is to guide developers through the steps required to integrate R/Bioconductor tools into the Galaxy platform. Galaxy is language agnostic, so tools written in different languages can be integrated into Galaxy. This tutorial specifically focuses on R/Bioconductor tool integration.
 
 This tutorial aims to familiarize readers with:
 
@@ -14,7 +14,7 @@ Table of contents
 --------------
 
 
-- [An Overview of Galaxy Tools](#an-overview-of-galaxy-tools)
+- [Overview of Galaxy Tools](#an-overview-of-galaxy-tools)
     - [Quick summary](#quick-summary)
     - [Directory structure](#directory-structure)
 - [Galaxy Tool Components](#galaxy-tool-components)
@@ -47,7 +47,9 @@ An Overview of Galaxy Tools
 
 ### Quick summary
 
-A Galaxy tool is defined by four components. The first component is a **Tool definition file** (or **Tool wrapper**) in XML format. This file contains seven important parts:
+In general, a Galaxy tool consists of one or more files that informs Galaxy how to run a script that was developed to execute a particular analysis. Galaxy tools can be written in a number of languages. This tutorial focuses on integrating tools written in [R](https://cran.r-project.org/), many of which take advantage of bioinformatic/genomic analysis tools avaialable in [Bioconductor](https://www.bioconductor.org/).
+
+An integrated R/Bioconductor Galaxy tool is defined by four components. The first component is a **Tool definition file** (or **Tool wrapper**) in XML format. This file contains seven important parts:
 
 1. *Requirements* - Dependencies needed to run the R command
 2. *Inputs* - One or more input files/parameters given to Custom R file
@@ -63,11 +65,11 @@ The third component needed for integrating an R/Bioconductor tool is a **Tool de
 
 The fourth component needed for integrating an R/Bioconductor tool is a **Test data** directory which includes data file(s) intended as input to test the R script and any expected output data file(s). 
 
-An example Tool definition file, Custom R file, Tool dependency file, and Test data directory for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [paper_supp_files/](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/). This tool will subsequently be referred to as “Kmer_enumerate” and will be referenced throughout the remaining sections of this guide.
+An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [paper_supp_files](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
 
-Some excellent additional resources for Galaxy tool development information:
+Additional resources for Galaxy tool development can be found here:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
-- [Add a tool tutorial Wiki](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
+- [General tutorial for adding tools to Galaxy](https://wiki.galaxyproject.org/Admin/Tools/AddToolTutorial)
 
 ### Directory structure
 
