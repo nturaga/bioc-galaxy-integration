@@ -68,7 +68,7 @@ The third component needed for integrating an R/Bioconductor tool is a **Tool de
 
 The fourth component needed for integrating an R/Bioconductor tool is a **Test data** directory which includes data file(s) intended as input to test the R script and any expected output data file(s). 
 
-An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [Kmer_enumerate_tool](https://github.com/nturaga/bioc-galaxy-integration/Kmer_enumerate_tool). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
+An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [paper_supp_files/](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
 
 Additional resources for Galaxy tool development can be found here:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
@@ -82,7 +82,7 @@ The *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test
 Kmer_enumerate_tool/
 ├── Kmer_enumerate_tool.R # Custom R file
 ├── Kmer_enumerate_tool.xml # Tool definition file
-├── Kmer_enumerate_tool_dependencies.xml # Tool dependency file
+├── tool_dependencies.xml # Tool dependency file
 ├── test_data/ # Test data directory
 │   ├── Kmer_enumerate_test_input.fq # Example fastq input file
 │   ├── Kmer_enumerate_test_output.txt # Example output text file
@@ -96,7 +96,7 @@ Galaxy Tool Components
 
 ### Tool definition file
 
-The *Tool definition file* informs Galaxy how to handle parameters in the Custom R file. The value given to "name" in the file header appears in the Galaxy tool panel and should be set to a meaningful short title of what the tool does. The example XML code below represents a Galaxy *Tool definition file* (`Kmer_enumerate_tool.xml`) to call the "Kmer_enumerate" R/Bioconductor tool. An important feature of the *Tool definition file* is that the variable names assigned to inputs and outputs in the `<command>` tag must also be used in the `<inputs>` and `<outputs>` tags. Additional examples of *Tool definition files* can be found in [my_r_tool/](https://github.com/nturaga/bioc-galaxy-integration/my_r_tool/).
+The *Tool definition file* informs Galaxy how to handle parameters in the Custom R file. The value given to "name" in the file header appears in the Galaxy tool panel and should be set to a meaningful short title of what the tool does. The example XML code below represents a Galaxy *Tool definition file* (`Kmer_enumerate_tool.xml`) to call the "Kmer_enumerate" R/Bioconductor tool. An important feature of the *Tool definition file* is that the variable names assigned to inputs and outputs in the `<command>` tag must also be used in the `<inputs>` and `<outputs>` tags. Additional examples of *Tool definition files* can be found in [my_r_tool/](https://github.com/nturaga/bioc-galaxy-integration/my_r_tool).
 
 ```{xml}
 <tool id="my_seqTools_tool" name="Kmer enumerate" version="0.1.0">
