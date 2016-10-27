@@ -49,7 +49,7 @@ An Overview of Galaxy Tools
 
 In general, a Galaxy tool consists of one or more files that informs Galaxy how to run a script that was developed to execute a particular analysis. Galaxy tools can be written in a number of languages. This tutorial focuses on integrating tools written in [R](https://cran.r-project.org/), many of which take advantage of bioinformatic/genomic analysis tools avaialable in [Bioconductor](https://www.bioconductor.org/).
 
-An integrated R/Bioconductor Galaxy tool is defined by four components. The first component is a **Tool definition file** (or **Tool wrapper**) in XML format. This file contains seven important parts:
+An integrated R/Bioconductor Galaxy tool is defined by four components. The first component is a **Tool definition file** (or **Tool wrapper**) in XML format. This file contains seven important parts (described in detail below):
 
 1. *Requirements* - Dependencies needed to run the R command
 2. *Inputs* - One or more input files/parameters given to Custom R file
@@ -57,15 +57,19 @@ An integrated R/Bioconductor Galaxy tool is defined by four components. The firs
 4. *Command* - The R command executed by Galaxy via the R interpreter
 5. *Tests* - Input/output parameters needed to test the R command
 6. *Help* - Describes the R/Bioconductor tool
-7. *Citations* - references cited using, for example, a DOI or a BibTeX entry
+7. *Citations* - References cited using, for example, a DOI or a BibTeX entry
 
-The second component needed for integrating an R/Bioconductor tool is a **Custom R file** which establishes the R environment and informs Galaxy what R command(s) to execute.
+The second component needed for integrating an R/Bioconductor tool is a **Custom R file** which establishes the R environment and informs Galaxy what R command(s) to execute. This file contains three important sections (described in detail below):
+
+1. *Header information*
+2. *Parameter handling*
+3. *R commands* - Code developed to execute the desired analysis
 
 The third component needed for integrating an R/Bioconductor tool is a **Tool dependency file** in XML format. This file informs Galaxy where to find the required tool dependencies needed to execute the Custom R file. 
 
 The fourth component needed for integrating an R/Bioconductor tool is a **Test data** directory which includes data file(s) intended as input to test the R script and any expected output data file(s). 
 
-An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [paper_supp_files](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
+An example *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* for an R/Bioconductor tool that enumerates k-mers in a fastq file is available in [Kmer_enumerate_tool](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/). This tool will subsequently be referred to as "Kmer_enumerate" and will be referenced throughout the remaining sections of this guide.
 
 Additional resources for Galaxy tool development can be found here:
 - [Official Galaxy Tool Wiki](https://wiki.galaxyproject.org/Admin/Tools/)
@@ -73,17 +77,17 @@ Additional resources for Galaxy tool development can be found here:
 
 ### Directory structure
 
-The *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* exist in their own directory (*e.g.* ```example_tool```). The files should be organized using the following directory structure:
+The *Tool definition file*, *Custom R file*, *Tool dependencies file*, and *Test data directory* exist in their own directory (*e.g.* ```Kmer_enumerate_tool```). The files should be organized using the following directory structure:
 
 ```
-example_tool/
-├── my_tool.R # Custom R file
-├── my_tool.xml # Tool definition file
-├── tool_dependencies.xml # Tool dependency file
+Kmer_enumerate_tool/
+├── Kmer_enumerate_tool.R # Custom R file
+├── Kmer_enumerate_tool.xml # Tool definition file
+├── Kmer_enumerate_tool_dependencies.xml # Tool dependency file
 ├── test_data/ # Test data directory
-│   ├── test_input.fq # Example fastq input file
-│   ├── test_output.txt # Example output text file
-│   └── ... # Additional input or output files
+│   ├── Kmer_enumerate_test_input.fq # Example fastq input file
+│   ├── Kmer_enumerate_test_output.txt # Example output text file
+│   └── ... # Additional inputs or outputs
 ```
 
 ---------------
@@ -93,102 +97,152 @@ Galaxy Tool Components
 
 ### Tool definition file
 
-The *Tool definition file* informs Galaxy how to handle parameters in the Custom R file. The value given to "name" in the file header appears in the Galaxy tool panel and should be set to a meaningful short description of what the tool does. The example XML code below represents the minimal structure of a Galaxy *Tool definition file* (```my_tool.xml```) to call the "my_tool" R/Bioconductor tool. Additional examples of *Tool definition files* can be found in [paper_supp_files/](https://github.com/nturaga/bioc-galaxy-integration/paper_supp_files/).
+The *Tool definition file* informs Galaxy how to handle parameters in the Custom R file. The value given to "name" in the file header appears in the Galaxy tool panel and should be set to a meaningful short title of what the tool does. The example XML code below represents a Galaxy *Tool definition file* (```Kmer_enumerate_tool.xml```) to call the "Kmer_enumerate" R/Bioconductor tool. An important feature of the *Tool definition file* is that the variable names assigned to inputs and outputs in the ```<command>``` tag must also be used in the ```<inputs>``` and ```<outputs>``` tags. Additional examples of *Tool definition files* can be found in [my_r_tool/](https://github.com/nturaga/bioc-galaxy-integration/my_r_tool/).
 
 ```
-<tool id="my_tool" name="My new R tool" version="0.1.0">
-    <command detect_errors="exit_code"><![CDATA[
-        Rscript </path/to/example_tool/my_tool.R --input $galaxy_input --output $galaxy_output
+<tool id="my_seqTools_tool" name="Kmer enumerate" version="0.1.0">
+    <!-- A simple description of the tool that will appear in the tool panel in Galaxy. -->
+    <description> counts the number of kmers in a fastq file.</description>
+    <!-- Handles exit codes in Galaxy. -->
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <requirements>
+        <requirement type="package" version="3.2.1">R</requirement>
+        <requirement type="package" version="1.2.0">getopt</requirement>
+        <requirement type="package" version="1.6.0">seqTools</requirement>
+    </requirements>
+    <command><![CDATA[
+        Rscript /path/to/Kmer_enumerate_tool/Kmer_enumerate_tool.R --input1 $galaxy_input1 --input2 $galaxy_input2 --output $galaxy_output
     ]]></command>
     <inputs>
-        <param type="data" name="galaxy_input" format="csv" />
+        <param type="data" name="galaxy_input1" format="fastq" label="Fastq file" />
+        <param type="integer" name="galaxy_input2" value="1" label="Kmer size to count"/>
     </inputs>
     <outputs>
-        <data name="galaxy_output" format="csv" />
+        <data name="galaxy_output" format="txt" />
     </outputs>
     <tests>
         <test>
-            <param name="galaxy_input" value="/path/to/test_data/input.csv"/>
-            <output name="galaxy_output" file="/path/to/test_data/output.csv"/>
+            <param name="galaxy_input1" value="/galaxy/tools/mytools/test_data/test_input.fq.gz"/>
+            <param name="galaxy_input2" value="2"/>
+            <output name="galaxy_output" file="/galaxy/tools/mytools/test_data/test_output.txt"/>
         </test>
     </tests>
     <help><![CDATA[
-        This is a dummy Tool definition XML file that does not actually do anything.
+        Reads in fastq file and enumerates kmers.
     ]]></help>
     <citations>
-        <!-- Sample citation to the original Galaxy paper -->
-        <citation>10.1186/gb-2010-11-8-r86</citation>
+        <citation type="bibtex">
+    @Manual{seqtools,
+        title = {seqTools: Analysis of nucleotide, sequence and quality content on fastq files.},
+        author = {Wolfgang Kaisers},
+        year = {2013},
+        note = {R package version 1.4.1},
+        url = {http://bioconductor.org/packages/seqTools/},
+    }
+        </citation>
     </citations>
 </tool>
+
 
 ```
 
 #### Inputs
 
-Inputs to the Galaxy *Tool definition file* are given by the XML tags ```<inputs>```, and each input inside is given by the ```<param>``` tag. In the ```<param>``` tag you can define ```name, value, type, label, format``` attributes. More details can be found [here](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cinputs.3E_tag_set).
+Each input to the Galaxy *Tool definition file* is given by a ```<param>``` tag in the ```<inputs>``` section. The ```<param>``` tag is used to define aspects of the input including its datatype, the input name (must match ```<command>``` tag), expected format *(e.g.* fastq), and a label that will appear in the tool form. Complete details regarding all tags available for Galaxy *Tool definition files* can be found [here](https://docs.galaxyproject.org/en/latest/dev/schema.html).
 
 #### Outputs
 
-Outputs of the Galaxy *Tool definition file* are given by the XML tags ```<outputs>```, and each output inside is given by the ```<data>``` tag. In the ```<data>``` tag you can define ```name, format, from_work_dir``` attributes. More details can be found  [here](https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cdata.3E_tag_set).
+Each output to the Galaxy *Tool definition file* is given by a ```<data>``` tag in the ```<outputs>``` section.  The ```<data>``` tag is used for outputs in much the same way as the ```<param>``` tag for inputs. Complete details regarding all tags available for Galaxy *Tool definition files* can be found [here](https://docs.galaxyproject.org/en/latest/dev/schema.html).
 
 #### Command
 
-The full path to the Galaxy tool is set in the *Tool definition file*. For example: ```/path/to/directory/my_r_tool/my_r_tool.R```.
+The command section defines the R command that is executed in Galaxy via the R interpreter. The full path to the Galaxy tool must be set in this section. For example: ```/path/to/Kmer_enumerate_tool/Kmer_enumerate_tool.R```. Variable names assigned to inputs and outputs much match what is given to the ```<param>``` and ```<data>``` tags, respectively. 
 
-### Custom R script
+#### Requirements
 
-This file contains required information (first six commands), your variable parameters, and the actual R commands your tool will run. 
-Below is an example of a *Custom R script* (```my_r_tool.R```). It sets the first column of an input CSV file to zeros and saves the output as another CSV file.
+The requirements section defines the tool dependencies needed to run the R script and includes the version of R used to develop the tool. 
+
+#### Tests
+
+The tests section defines the input parameters needed to test the R command and what output to expect as a result. This section is important for tool testing and debugging. 
+
+#### Help
+
+The help section should be used to describe the R/Bioconductor tool and will appear at the bottom of the Galaxy tool form. 
+
+#### Citations
+
+Appropriate references for any components of the R/Bioconductor tool (R packages, test data, etc.) can be provided using the citations section. These citations will appear at the bottom of the tool form in Galaxy. Multiple references can be cited but using multiple ```<citation>``` tags, and citations will be automatically formated if using, for example, a DOI or a BibTeX entry.
+
+### Custom R file
+
+The *Custom R file* establishes the R environment and informs Galaxy what R command(s) to execute. The example R code below executes the "Kmer_enumerate" R/Bioconductor tool. Additional examples of *Custom R files* can be found in [my_r_tool/](https://github.com/nturaga/bioc-galaxy-integration/my_r_tool/).
 
 ```{r}
-# Setup R error handling to go to stderr
+## Command to run tool:
+# Rscript Kmer_enumerate_tool.R --input Kmer_enumerate_test_input.fq --input 2 --output Kmer_enumerate_test_output.txt
+
+# Set up R error handling to go to stderr
 options(show.error.messages=F, error=function(){cat(geterrmessage(),file=stderr());q("no",1,F)})
 
-# We need to not crash galaxy with an UTF8 error on German LC settings.
+# Avoid crashing Galaxy with an UTF8 error on German LC settings
 loc <- Sys.setlocale("LC_MESSAGES", "en_US.UTF-8")
 
-# Import libraries your R script uses
+# Import required libraries
 library("getopt")
+library("seqTools")
 options(stringAsfactors = FALSE, useFancyQuotes = FALSE)
+
 # Take in trailing command line arguments
 args <- commandArgs(trailingOnly = TRUE)
+
+# Get options using the spec as defined by the enclosed list
+# Read the options from the default: commandArgs(TRUE)
+option_specification = matrix(c(
+  'input1', 'i1', 2, 'character',
+  'input2', 'i2', 2, 'integer',
+  'output', 'o', 2, 'character'
+), byrow=TRUE, ncol=4);
 
 # Parse options
 options = getopt(option_specification);
 
-# These are the variable paramters of your R script
-# getopt will use the information provided for each variable to populate variable parameters of your R script 
-# For each variable, establish a name, single letter name, the number 2 (?), and the input type (character, integer, float, etc). 
-option_specification = matrix(c(
-  'input', 'i', 2, 'character',
-  'output', 'o', 2, 'character'
-), byrow=TRUE, ncol=4);
+# Print options to stderr
+# Useful for debugging
+#cat("\n input file: ",options$input1)
+#cat("\n kmer: ",options$input2)
+#cat("\n output file: ",options$output)
 
+# Read in fastq file and call fastqq to enumerate kmers
+fq <- fastqq(options$input1, k = options$input2)
 
-# Print options to see what is going on
-# This information will be viewable with the output file (in your history)
-cat("\n input: ",options$input)
-cat("\n output: ",options$output)
+# List kmers and counts from fastqq object
+kc <- kmerCount(fq)[, 1]
 
+# Output kmer counts
+write.table(kc, file = options$output, quote = F, col.names = F)
 
-# The following section contains your R script
-
-# READ in your input file
-inp = read.csv(file=options$input, stringsAsFactors = FALSE)
-
-# Do something with you input
-# This one changes every value in the first column to 0
-inp$V1 = c(rep(0,10))
-
-# Save your output as the file you want to Galaxy to recognize.
-write.csv(inp, file=options$output,row.names = FALSE)
-cat("\n success \n")
+cat("\n Successfully counted kmers in fastq file. \n")
 ```
+
+#### Header information
+
+The first section of this file contains a header of information that handles error messages, loads required R libraries, and parses options. These requirements are needed for every R/Bioconductor tool being integrated; however, the list of imported R libraries will be specific to each tool. 
+
+#### Parameter handling
+
+The next section defines the list of parameters to pass to the R command, including input and output parameters. Each parameter requires a unique name, a unique single letter designation, a flag indicating whether the parameter is required (0=no argument, 1=required, 2=optional), and the parameter type (*e.g.* character, integer, float). Optionally, variable names and values can be printed to standard error (stderr), which can be viewed in Galaxy when the tool executes. While not required, these printed statements can assist in debugging and inform whether the R/Bioconductor tool executed correctly. 
+
+#### R commands
+
+The final section contains the R command(s) needed to execute the R/Bioconductor tool. The Kmer_enumerate tool above uses the R/Bioconductor package seqTools to read in a fastq file of DNA sequences, count the number of k-mers in the sequences where the value k is supplied by the user, and output the k-mers and their counts.
 
 *Custom R scripts* should be written so that they are testable and usable outside of Galaxy. Scripts can be tested using the following command line instruction:
 
 ```
-Rscript my_r_tool.R --input 'input.csv' --output 'output.csv'
+Rscript Kmer_enumerate_tool.R --input 'Kmer_enumerate_test_input.fq' --output 'Kmer_enumerate_test_output.txt'
 ```
 
 If we look at the script run by the Galaxy tool, it looks very similar. This can be found if you click on the information (**i**) icon on your job run. These icons are highlighted in the image below.
