@@ -1,6 +1,6 @@
-<tool id="my_r_tool_verbose" name="MY NIFTY R TOOL VERBOSE" version="0.1.0">
+<tool id="my_r_tool_verbose" name="My nifty R tool - verbose" version="0.1.0">
     <command detect_errors="exit_code"><![CDATA[
-        Rscript /Users/nturaga/Documents/galaxyproject/bioc-galaxy-integration/my_r_tool/my_r_tool_verbose.R --input $galaxy_input > output.csv
+        Rscript /path/to/my_r_tool/my_r_tool_verbose.R --input $galaxy_input > output.csv
     ]]></command>
     <inputs>
         <param name="galaxy_input" type="data" format="csv" /> 
@@ -17,7 +17,7 @@
         </test>
     </tests>
     <help><![CDATA[
-        Write you tool help section here
+        Write tool help section here.
     ]]></help>
     <citations>
         <citation>10.1186/gb-2010-11-8-r86</citation>
